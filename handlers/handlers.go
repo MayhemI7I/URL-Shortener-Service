@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"local/internal/db"
 	"local/logger"
 	"local/utils"
 )
@@ -24,6 +25,32 @@ func WithLog(next http.Handler) http.Handler {
 		)
 	})
 }
+
+type PingHandler struct {
+	dbConnector *db.DbConnector
+}
+
+func NewPingHandler(dbConnector *db.DbConnector) *PingHandler {
+	return &PingHandler{
+		dbConnector: dbConnector,
+	}
+}
+
+func (p *PingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request){
+	if r.Method != http.MethodGet {
+		logger.Log.Error("Method not allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	if err := p.dbConnector.PingDataBase(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("OK"))
+}
+
+
+
 
 type URLRequest struct {
 	ShortURL string `json:"short_url"`
@@ -86,7 +113,7 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.storage.SaveURL(shortURL, longURL)
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8").
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(shortURL))
 }
@@ -128,3 +155,4 @@ func (h *URLHandler) HandURL(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
+

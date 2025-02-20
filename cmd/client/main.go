@@ -7,14 +7,16 @@ import (
 	"local/logger"
 	"os"
 	"strings"
+	"time"
+
 	"github.com/go-resty/resty/v2"
 )
 
 // Интерфейс для клиента, выполняющего запросы
-type PostClient interface {
-	PostJSON(url string, longURL string) (string, int, error)
-	PostFormData(url string, longURL string) (string, int, error)
-}
+// type PostClient interface {
+// 	PostJSON(url string, longURL string) (string, int, error)
+// 	PostFormData(url string, longURL string) (string, int, error)
+// }
 
 // Структура для реализации клиента с resty
 type ClientReq struct {
@@ -64,6 +66,20 @@ func (c *ClientReq) PostFormData(url, longURL string) (string, int, error) {
 	return result, response.StatusCode(), nil
 }
 
+func(c *ClientReq) GetPing(url string) (string, int, error) {
+	response, err := c.request.R().
+	Get(url)
+		
+	if response.StatusCode() != 200 && response.StatusCode() != 201 {
+		logger.Log.Errorf("Server returned error: %s, %v", response.Status(), response.String())
+		return "", response.StatusCode(), err
+	}
+	
+
+	result := response.String()
+	return result, response.StatusCode(), nil
+}
+
 // Чтение длинного URL с консоли
 func readLongURL() (string, error) {
 	fmt.Println("Введите длинный URL")
@@ -92,6 +108,7 @@ func main() {
 
 	// Создание клиента для выполнения запросов
 	client := resty.New()
+	client.SetTimeout(500 * time.Millisecond)
 	postClient := &ClientReq{request: client}
 
 	var response string
@@ -109,6 +126,13 @@ func main() {
 		if err != nil || response == "" {
 			logger.Log.Fatalf("Error posting form data: %s", err.Error())
 		}
+	case "http://localhost:8080/ping":
+		response, statusCode, err = postClient.GetPing(cfg.BaseURL)
+		if err != nil {
+			logger.Log.Errorf("Error during GET request: %v", err)
+		}
+		fmt.Printf("Response body: %s\n", response)
+		fmt.Printf("Status Code: %d\n", statusCode)
 	}
 
 	// Вывод результатов

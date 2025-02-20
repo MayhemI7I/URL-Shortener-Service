@@ -4,6 +4,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
+
 )
 
 var Log *zap.SugaredLogger 
@@ -38,7 +39,7 @@ func InitLogger(logLevel string) {
 	consoleWriter := zapcore.AddSync(os.Stdout)
 
 	// Создаем Writer для вывода в файл
-	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	logFile, err := os.OpenFile("/short-url-db.json", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic("Не удалось создать файл для логов: " + err.Error())
 	}
