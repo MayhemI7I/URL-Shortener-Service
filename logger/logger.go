@@ -4,19 +4,18 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
-
 )
 
-var Log *zap.SugaredLogger 
+var Log *zap.SugaredLogger
 
 func InitLogger(logLevel string) {
 	// Устанавливаем уровень логирования
 	var level zapcore.Level
 	switch logLevel {
-	case "1":
-		level = zapcore.InfoLevel
-	case "2":
+	case "debug":
 		level = zapcore.DebugLevel
+	case "info":
+		level = zapcore.InfoLevel
 	default:
 		level = zapcore.InfoLevel
 	}
@@ -24,28 +23,21 @@ func InitLogger(logLevel string) {
 	// Форматирование логов
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.TimeKey = "timestamp"
-	encoderConfig.LevelKey = "level"
-	encoderConfig.NameKey = "logger"
-	encoderConfig.CallerKey = "caller"
-	encoderConfig.MessageKey = "message"
-	encoderConfig.StacktraceKey = "stacktrace"
+	encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("02-01-2006 15:04:05") // Читаемое время
 
-	// Для консольного вывода
+	// Для консоли
 	consoleEncoder := zapcore.NewConsoleEncoder(encoderConfig)
-	// Для файла
-	fileEncoder := zapcore.NewJSONEncoder(encoderConfig)
-
-	// Создаем Writer для вывода в консоль
 	consoleWriter := zapcore.AddSync(os.Stdout)
 
-	// Создаем Writer для вывода в файл
-	logFile, err := os.OpenFile("/short-url-db.json", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	// Для файла
+	fileEncoder := zapcore.NewJSONEncoder(encoderConfig)
+	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic("Не удалось создать файл для логов: " + err.Error())
 	}
 	fileWriter := zapcore.AddSync(logFile)
 
-	// Создаем Core с комбинированными обработчиками
+	// Создаем Core с консолью и файлом
 	core := zapcore.NewTee(
 		zapcore.NewCore(consoleEncoder, consoleWriter, level),
 		zapcore.NewCore(fileEncoder, fileWriter, level),
@@ -58,6 +50,6 @@ func InitLogger(logLevel string) {
 
 func CloseLogger() {
 	if Log != nil {
-		Log.Sync() // Закрытие логгера, запись всех оставшихся логов в файл
+		_ = Log.Sync() // Закрываем логгер, записываем всё в файл
 	}
 }

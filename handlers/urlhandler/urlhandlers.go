@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"local/logger"
@@ -45,7 +46,8 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
-	shortURL := r.URL.Path[1:]
+	shortURL := strings.TrimPrefix(r.URL.Path, "/")
+	logger.Log.Info("shortURL", zap.String("shortURL", shortURL))
 	longURL, err := h.storage.Get(ctx, shortURL)
 	if err != nil {
 		if err == context.DeadlineExceeded {
@@ -59,7 +61,7 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Location", longURL)
 	w.WriteHeader(http.StatusTemporaryRedirect)
-	logger.Log.Debug("redirection", zap.String("to", longURL))
+	logger.Log.Info("redirection", zap.String("to", longURL))
 }
 
 // HandlePost обрабатывает POST-запрос.
@@ -126,14 +128,14 @@ func (h *URLHandler) HandJsonPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *URLHandler) HandURL(w http.ResponseWriter, r *http.Request) {
-   switch r.Method {
-   case http.MethodGet:
-   	h.HandleGet(w, r)
-   case http.MethodPost: 
-      h.HandlePost(w, r)
+	switch r.Method {
+	case http.MethodGet:
+		h.HandleGet(w, r)
+	case http.MethodPost:
+		h.HandlePost(w, r)
 
-   default:
-   	logger.Log.Error("Method not allowed", zap.Int("status", http.StatusMethodNotAllowed))
-   	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-   }
+	default:
+		logger.Log.Error("Method not allowed", zap.Int("status", http.StatusMethodNotAllowed))
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
 }

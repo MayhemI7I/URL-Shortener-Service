@@ -146,15 +146,21 @@ func main() {
 	}
 
 	// 4. Тестируем редирект по короткому URL (GET /{shortURL})
+	// 4. Тестируем редирект по короткому URL (GET /{shortURL})
 	if statusCode == 201 || statusCode == 200 {
 		shortURL := strings.Trim(response, `"`) // Убираем кавычки, если сервер вернул JSON строку
-		fmt.Println("\n🔹 Тест: GET " + shortURL)
+		fmt.Println("\n🔹 Тест: GET redirect " + shortURL)
 
-		response, statusCode, err = postClient.GetShortURL(cfg.BaseURL + "/" + shortURL)
-		if err == nil {
-			fmt.Printf("✅ Редирект работает! Ответ: %s (Код: %d)\n", response, statusCode)
+		resp, err := postClient.request.R().Get(cfg.BaseURL + "/" + shortURL)
+		if err == nil && statusCode >= 300 && statusCode < 400 {
+			location := resp.Header().Get("Location")
+			if location != "" {
+				fmt.Printf("✅ Редирект работает! Перенаправление на: %s (Код: %d)\n", location, statusCode)
+			} else {
+				fmt.Printf("❌ Ошибка: сервер не вернул заголовок Location (Код: %d)\n", statusCode)
+			}
 		} else {
-			fmt.Printf("❌ Ошибка при редиректе: %v\n", err)
+			fmt.Printf("❌ Ошибка при редиректе: %v (Ответ: %s, Код: %d)\n", err, resp.String(), statusCode)
 		}
 	}
 

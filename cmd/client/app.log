@@ -1,0 +1,18 @@
+{"level":"info","timestamp":1740419201.8856323,"message":"Starting client"}
+{"level":"error","timestamp":1740419209.2608485,"message":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"level":"info","timestamp":1740420190.001583,"message":"Starting client"}
+{"level":"error","timestamp":1740420192.8346522,"message":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"level":"info","timestamp":1740421000.0978181,"message":"Starting client"}
+{"level":"error","timestamp":1740421005.0733132,"message":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"level":"info","timestamp":"24-02-2025 21:35:58","msg":"Starting client"}
+{"level":"error","timestamp":"24-02-2025 21:36:01","msg":"Ping error: Get \"http://localhost:8080/Ph-VaNhL\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
+{"level":"error","timestamp":"24-02-2025 21:36:01","msg":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"level":"error","timestamp":"24-02-2025 21:36:01","msg":"error: Post \"http://localhost:8080/\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
+{"level":"error","timestamp":"24-02-2025 21:36:02","msg":"GET error: Get \"http://localhost:8080/unknown_path\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
+{"level":"info","timestamp":"24-02-2025 21:37:44","msg":"Starting client"}
+{"level":"error","timestamp":"24-02-2025 21:37:45","msg":"Ping error: Get \"http://localhost:8080/Ph-VaNhL\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
+{"level":"error","timestamp":"24-02-2025 21:37:45","msg":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"level":"error","timestamp":"24-02-2025 21:37:45","msg":"error: Post \"http://localhost:8080/\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
+{"level":"error","timestamp":"24-02-2025 21:37:46","msg":"GET error: Get \"http://localhost:8080/unknown_path\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
+{"level":"info","timestamp":"24-02-2025 21:41:10","msg":"Starting client"}
+{"level":"error","timestamp":"24-02-2025 21:41:11","msg":"Server returned error: 500 Internal Server Error, Error generating short URL"}

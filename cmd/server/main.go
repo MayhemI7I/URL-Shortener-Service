@@ -9,6 +9,7 @@ import (
 	"local/logger"
 	"local/utils"
 	"net/http"
+	"time"
 )
 
 // initApp выполняет все необходимые иниты и возвращает готовые зависимости.
@@ -45,7 +46,7 @@ func main() {
 	mux := http.NewServeMux()
 	compressedHandler := loghandler.WithLog(
 		zstd.Decompression(
-			zstd.Compression( 
+			zstd.Compression(
 				http.HandlerFunc(urlHandler.HandURL),
 			),
 		),
@@ -69,6 +70,6 @@ func main() {
 // runServer запускает HTTP-сервер
 func runServer(cfg *config.Config, mux *http.ServeMux) error {
 	addr := cfg.ServerAdress + ":" + cfg.ServerPort
-	logger.Log.Infof("Server started on %s", addr)
+	logger.Log.Infof(time.Now().Format("2006-01-02 15:04:05")+"Server started on %s", addr)
 	return http.ListenAndServe(addr, mux)
 }

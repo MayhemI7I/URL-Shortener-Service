@@ -4,34 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"local/logger"
 	"log"
 	"os"
 	"sync"
-	"io"
 )
 
 type FileStorage struct {
-	urls map[string]string 
+	urls map[string]string
 	mu   sync.Mutex
 	file *os.File
-}
-
-func NewFileStorage(filename string) (*FileStorage, error) {
-	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0666)
-	if err != nil {
-		return nil, err
-	}
-	storage := &FileStorage{
-		urls: make(map[string]string),
-		mu:   sync.Mutex{},
-		file: file,
-	}
-	return storage, nil
-}
-
-func (us *FileStorage) Close() error {
-	return us.file.Close()
 }
 
 func (us *FileStorage) Load() error {
@@ -53,6 +36,24 @@ func (us *FileStorage) Load() error {
 	return nil
 }
 
+func NewFileStorage(filename string) (*FileStorage, error) {
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		return nil, err
+	}
+	storage := &FileStorage{
+		urls: make(map[string]string),
+		mu:   sync.Mutex{},
+		file: file,
+	}
+	storage.Load()
+	return storage, nil
+}
+
+func (us *FileStorage) Close() error {
+	return us.file.Close()
+}
+
 func (us *FileStorage) Save(ctx context.Context, shortURL, longURL string) error {
 	select {
 	case <-ctx.Done():
@@ -64,11 +65,11 @@ func (us *FileStorage) Save(ctx context.Context, shortURL, longURL string) error
 	defer us.mu.Unlock()
 
 	if shortURL == "" || longURL == "" {
-		log.Printf("Invalid argument: %s, %s", shortURL, longURL)
+		logger.Log.Errorf("Invalid argument: %s, %s", shortURL, longURL)
 		return errors.New("invalid argument")
 	}
 	if _, exists := us.urls[shortURL]; exists {
-		logger.Log.Info("URL already exists: %s", shortURL)
+		logger.Log.Infof("URL already exists: %s", shortURL)
 		return errors.New("URL already exists")
 	}
 	us.urls[shortURL] = longURL

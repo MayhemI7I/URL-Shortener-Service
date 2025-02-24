@@ -1,0 +1,47 @@
+{"level":"error","timestamp":1740418741.8708224,"message":"failed to connect to `user=postgres database=usvideos`:\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connectex: No connection could be made because the target machine actively refused it.\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"fatal","timestamp":1740418741.8713367,"message":"failed to initialize application: failed to connect to `user=postgres database=usvideos`:\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connectex: No connection could be made because the target machine actively refused it.\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"info","timestamp":1740419094.1707642,"message":"Server started on localhost:8080"}
+{"level":"error","timestamp":1740419209.2603378,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":1740419209.2608485,"message":"Generated short URL: 5ALBlShF"}
+{"level":"info","timestamp":1740419209.2613819,"message":"Saved: %s -> %s5ALBlShFurl=sdfsvsdvffdbmdfb"}
+{"level":"info","timestamp":1740419209.2613819,"message":"Retrieved: %s -> %s5ALBlShFurl=sdfsvsdvffdbmdfb"}
+{"level":"error","timestamp":1740419209.2613819,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"error","timestamp":1740419209.261894,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"error","timestamp":1740420192.8341417,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":1740420192.835163,"message":"Generated short URL: -QMtHKyn"}
+{"level":"info","timestamp":1740420192.835163,"message":"Saved: %s -> %s-QMtHKynurl=%D0%BB%D0%BF%D0%BB%D0%BF%D0%BE%D1%80%D0%BB%D0%BB%D1%80"}
+{"level":"info","timestamp":1740420192.835163,"message":"Retrieved: %s -> %s-QMtHKynurl=%D0%BB%D0%BF%D0%BB%D0%BF%D0%BE%D1%80%D0%BB%D0%BB%D1%80"}
+{"level":"error","timestamp":1740420192.8356745,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"error","timestamp":1740420192.8356745,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":1740420989.7723732,"message":"2025-02-24 21:16:29Server started on localhost:8080"}
+{"level":"info","timestamp":1740421005.0727987,"message":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"level":"error","timestamp":1740421005.0727987,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":1740421005.0738244,"message":"Generated short URL: AAyNyvnJ"}
+{"level":"info","timestamp":1740421005.0738244,"message":"Saved: %s -> %sAAyNyvnJurl=fsaasdsdfsadfe34234234"}
+{"level":"info","timestamp":1740421005.0743375,"message":"shortURL{shortURL 15 0 AAyNyvnJ <nil>}"}
+{"level":"info","timestamp":1740421005.0743375,"message":"Retrieved: %s -> %sAAyNyvnJurl=fsaasdsdfsadfe34234234"}
+{"level":"info","timestamp":1740421005.0743375,"message":"redirection{to 15 0 url=fsaasdsdfsadfe34234234 <nil>}"}
+{"level":"info","timestamp":1740421005.0743375,"message":"shortURL{shortURL 15 0 url=fsaasdsdfsadfe34234234 <nil>}"}
+{"level":"error","timestamp":1740421005.0743375,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":1740421005.0748498,"message":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"level":"error","timestamp":1740421005.0748498,"message":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":"24-02-2025 21:35:48","msg":"2025-02-24 21:35:48Server started on localhost:8080"}
+{"level":"info","timestamp":"24-02-2025 21:36:00","msg":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"level":"info","timestamp":"24-02-2025 21:36:01","msg":"Generated short URL: -EikF101"}
+{"level":"info","timestamp":"24-02-2025 21:36:01","msg":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"level":"info","timestamp":"24-02-2025 21:37:40","msg":"2025-02-24 21:37:40Server started on localhost:8080"}
+{"level":"info","timestamp":"24-02-2025 21:37:44","msg":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"level":"info","timestamp":"24-02-2025 21:37:45","msg":"Generated short URL: uX13nWh5"}
+{"level":"info","timestamp":"24-02-2025 21:37:45","msg":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"level":"info","timestamp":"24-02-2025 21:41:04","msg":"2025-02-24 21:41:04Server started on localhost:8080"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"level":"error","timestamp":"24-02-2025 21:41:11","msg":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"Generated short URL: Rv0w06I9"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"Saved: %s -> %sRv0w06I9url=asdasdasda"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"shortURL{shortURL 15 0 Rv0w06I9 <nil>}"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"Retrieved: %s -> %sRv0w06I9url=asdasdasda"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"redirection{to 15 0 url=asdasdasda <nil>}"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"shortURL{shortURL 15 0 url=asdasdasda <nil>}"}
+{"level":"error","timestamp":"24-02-2025 21:41:11","msg":"URL not found{error 26 0  URL not found in storage}"}
+{"level":"info","timestamp":"24-02-2025 21:41:11","msg":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"level":"error","timestamp":"24-02-2025 21:41:11","msg":"URL not found{error 26 0  URL not found in storage}"}
