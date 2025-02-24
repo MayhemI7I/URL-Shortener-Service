@@ -15,7 +15,8 @@ type Config struct {
    BaseURL      string
    LogLevel     string
    FileStorage  string
-   DataBaseDSN string
+   DataBaseDSN  string
+   URLLength  uint16
 }
 
 // InitConfig initializes the configuration for the application.
@@ -29,7 +30,7 @@ func InitConfig() *Config {
    pflag.StringVar(&cfg.LogLevel, "log-level", "1", "Log level")
    pflag.StringVarP(&cfg.FileStorage, "file-storage", "f", "/short-url-db.json", "Path to file storage")
    pflag.StringVarP(&cfg.DataBaseDSN, "database-dsn", "d", "host=localhost user=postgres password=1 dbname=usvideos sslmode=disable", "PostgreSQL DSN")
-
+   pflag.Uint16VarP(&cfg.URLLength, "url-length", "l", 8, "URL length")
    // Override configuration with environment variables if they are set
    if envServerAdress := os.Getenv("SERVER_ADDRESS"); envServerAdress != "" {
    	cfg.ServerAdress = envServerAdress
@@ -37,6 +38,7 @@ func InitConfig() *Config {
    }
    if envServerPort := os.Getenv("SERVER_PORT"); envServerPort != "" {
    	cfg.ServerPort = envServerPort
+   
    	logger.Log.Infof("Server port set to ", zap.String("port", envServerPort))
    }
    if envBaseURL := os.Getenv("BASE_URL"); envBaseURL != "" {

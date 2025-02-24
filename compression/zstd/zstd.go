@@ -20,7 +20,7 @@ func (zsw *ZstdRspWrt) Write(b []byte)(int, error){
 	return zsw.Writer.Write(b)
 }
 
-func ZstdDecompress(next http.Handler) http.Handler {
+func Decompression(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !strings.Contains(r.Header.Get("Content-Encoding"), "zstd") {
 			next.ServeHTTP(w, r)
@@ -41,7 +41,7 @@ func ZstdDecompress(next http.Handler) http.Handler {
 
  
 
-func ZstdCompress(next http.Handler) http.Handler {
+func Compression(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !strings.Contains(r.Header.Get("Accept-Encoding"), "zstd") {
 			next.ServeHTTP(w, r)

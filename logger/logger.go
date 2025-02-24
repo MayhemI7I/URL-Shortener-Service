@@ -43,7 +43,6 @@ func InitLogger(logLevel string) {
 	if err != nil {
 		panic("Не удалось создать файл для логов: " + err.Error())
 	}
-	defer logFile.Close()
 	fileWriter := zapcore.AddSync(logFile)
 
 	// Создаем Core с комбинированными обработчиками

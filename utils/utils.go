@@ -1,17 +1,29 @@
 package utils
 
 import (
-	"errors"
-	"crypto/sha256"
-	"encoding/base64"
+   "crypto/sha256"
+   "encoding/base64"
+   "errors"
+   "local/logger"
 )
 
-func GenerateShortURL(longurl string) (string,error) {
-	if longurl == "" || longurl == " " {
-		return"", errors.New("invalid URL for generate")
-	}
-	hash := sha256.Sum256([]byte(longurl))
-	shortURL := base64.URLEncoding.EncodeToString(hash[:])
-	return shortURL[:8],nil
+type GeneratorShortURL struct {
+   lenght uint16
+}
 
+func NewGeneratorShortURL(lenght uint16) *GeneratorShortURL {
+   return &GeneratorShortURL{lenght: lenght}
+}
+
+func (gen *GeneratorShortURL) GenerateShortURL(longurl string) (string, error) {
+   if longurl == "" || longurl == " " {
+   	return "", errors.New("invalid URL for generate")
+   }
+   hash := sha256.Sum256([]byte(longurl))
+   shortURL := base64.URLEncoding.EncodeToString(hash[:])
+   if len(shortURL) < int(gen.lenght) {
+   	return "", errors.New("generated short URL is too short")
+   }
+   logger.Log.Info("Generated short URL: ", shortURL[:gen.lenght])
+   return shortURL[:gen.lenght], nil
 }

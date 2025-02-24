@@ -12,18 +12,12 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-// Интерфейс для клиента, выполняющего запросы
-// type PostClient interface {
-// 	PostJSON(url string, longURL string) (string, int, error)
-// 	PostFormData(url string, longURL string) (string, int, error)
-// }
-
-// Структура для реализации клиента с resty
+// Клиент для HTTP-запросов
 type ClientReq struct {
 	request *resty.Client
 }
 
-// Реализация метода PostJSON для отправки JSON
+// POST JSON (API)
 func (c *ClientReq) PostJSON(url, longURL string) (string, int, error) {
 	response, err := c.request.R().
 		SetHeader("Content-Type", "application/json").
@@ -37,15 +31,13 @@ func (c *ClientReq) PostJSON(url, longURL string) (string, int, error) {
 
 	if response.StatusCode() != 200 && response.StatusCode() != 201 {
 		logger.Log.Errorf("Server returned error: %s, %v", response.Status(), response.String())
-		return "", response.StatusCode(), err
+		return "", response.StatusCode(), fmt.Errorf("server error: %s", response.String())
 	}
 
-	result := response.String()
-	fmt.Println(response)
-	return result, response.StatusCode(), nil
+	return response.String(), response.StatusCode(), nil
 }
 
-// Реализация метода PostFormData для отправки данных формы
+// POST FormData (обычный POST-запрос)
 func (c *ClientReq) PostFormData(url, longURL string) (string, int, error) {
 	response, err := c.request.R().
 		SetHeader("Content-Type", "application/x-www-form-urlencoded").
@@ -59,30 +51,39 @@ func (c *ClientReq) PostFormData(url, longURL string) (string, int, error) {
 
 	if response.StatusCode() != 200 && response.StatusCode() != 201 {
 		logger.Log.Errorf("Server returned error: %s, %v", response.Status(), response.String())
-		return "", response.StatusCode(), err
+		return "", response.StatusCode(), fmt.Errorf("server error: %s", response.String())
 	}
 
-	result := response.String()
-	return result, response.StatusCode(), nil
+	return response.String(), response.StatusCode(), nil
 }
 
-func(c *ClientReq) GetPing(url string) (string, int, error) {
-	response, err := c.request.R().
-	Get(url)
-		
-	if response.StatusCode() != 200 && response.StatusCode() != 201 {
-		logger.Log.Errorf("Server returned error: %s, %v", response.Status(), response.String())
-		return "", response.StatusCode(), err
-	}
-	
+// GET /ping – проверка сервера
+func (c *ClientReq) GetPing(url string) (string, int, error) {
+	response, err := c.request.R().Get(url)
 
-	result := response.String()
-	return result, response.StatusCode(), nil
+	if err != nil {
+		logger.Log.Errorf("Ping error: %s", err.Error())
+		return "", 0, err
+	}
+
+	return response.String(), response.StatusCode(), nil
+}
+
+// GET /{shortURL} – проверка редиректа
+func (c *ClientReq) GetShortURL(url string) (string, int, error) {
+	response, err := c.request.R().Get(url)
+
+	if err != nil {
+		logger.Log.Errorf("GET error: %s", err.Error())
+		return "", 0, err
+	}
+
+	return response.String(), response.StatusCode(), nil
 }
 
 // Чтение длинного URL с консоли
 func readLongURL() (string, error) {
-	fmt.Println("Введите длинный URL")
+	fmt.Println("Введите длинный URL:")
 	reader := bufio.NewReader(os.Stdin)
 	long, err := reader.ReadString('\n')
 	long = strings.TrimSpace(long)
@@ -98,15 +99,15 @@ func main() {
 	logger.InitLogger(cfg.LogLevel)
 	defer logger.CloseLogger()
 
-	logger.Log.Info("Starting server")
+	logger.Log.Info("Starting client")
 
 	// Чтение длинного URL
-	long, err := readLongURL()
+	longURL, err := readLongURL()
 	if err != nil {
 		logger.Log.Fatalf("error: %s", err.Error())
 	}
 
-	// Создание клиента для выполнения запросов
+	// Создание HTTP клиента
 	client := resty.New()
 	client.SetTimeout(500 * time.Millisecond)
 	postClient := &ClientReq{request: client}
@@ -114,28 +115,57 @@ func main() {
 	var response string
 	var statusCode int
 
-	// В зависимости от BaseURL, выбираем способ отправки данных
-	switch cfg.BaseURL {
-	case "http://localhost:8080":
-		response, statusCode, err = postClient.PostJSON(cfg.BaseURL, long)
-		if err != nil || response == "" {
-			logger.Log.Fatalf("Error posting JSON: %s", err.Error())
-		}
-	case "http://localhost:8080/api/shorten":
-		response, statusCode, err = postClient.PostFormData(cfg.BaseURL, long)
-		if err != nil || response == "" {
-			logger.Log.Fatalf("Error posting form data: %s", err.Error())
-		}
-	case "http://localhost:8080/ping":
-		response, statusCode, err = postClient.GetPing(cfg.BaseURL)
-		if err != nil {
-			logger.Log.Errorf("Error during GET request: %v", err)
-		}
-		fmt.Printf("Response body: %s\n", response)
-		fmt.Printf("Status Code: %d\n", statusCode)
+	// Тестируем все возможные пути
+	fmt.Println("\n=== ТЕСТИРУЕМ СЕРВЕР ===")
+
+	// 1. Проверяем, работает ли сервер (GET /ping)
+	fmt.Println("\n🔹 Тест: GET /ping")
+	response, statusCode, err = postClient.GetPing(cfg.BaseURL + "/Ph-VaNhL")
+	if err == nil {
+		fmt.Printf("✅ Сервер доступен! Ответ: %s (Код: %d)\n", response, statusCode)
+	} else {
+		fmt.Printf("❌ Ошибка ping: %v\n", err)
 	}
 
-	// Вывод результатов
-	fmt.Println("Response:", response)
-	fmt.Println("Status Code:", statusCode)
+	// 2. Тестируем создание короткого URL через JSON (POST /api/shorten)
+	fmt.Println("\n🔹 Тест: POST /api/shorten (JSON)")
+	response, statusCode, err = postClient.PostJSON(cfg.BaseURL+"/api/shorten", longURL)
+	if err == nil {
+		fmt.Printf("✅ Короткий URL создан: %s (Код: %d)\n", response, statusCode)
+	} else {
+		fmt.Printf("❌ Ошибка создания JSON URL: %v\n", err)
+	}
+
+	// 3. Тестируем создание короткого URL через FormData (POST /)
+	fmt.Println("\n🔹 Тест: POST / (FormData)")
+	response, statusCode, err = postClient.PostFormData(cfg.BaseURL+"/", longURL)
+	if err == nil {
+		fmt.Printf("✅ Короткий URL создан: %s (Код: %d)\n", response, statusCode)
+	} else {
+		fmt.Printf("❌ Ошибка создания FormData URL: %v\n", err)
+	}
+
+	// 4. Тестируем редирект по короткому URL (GET /{shortURL})
+	if statusCode == 201 || statusCode == 200 {
+		shortURL := strings.Trim(response, `"`) // Убираем кавычки, если сервер вернул JSON строку
+		fmt.Println("\n🔹 Тест: GET " + shortURL)
+
+		response, statusCode, err = postClient.GetShortURL(cfg.BaseURL + "/" + shortURL)
+		if err == nil {
+			fmt.Printf("✅ Редирект работает! Ответ: %s (Код: %d)\n", response, statusCode)
+		} else {
+			fmt.Printf("❌ Ошибка при редиректе: %v\n", err)
+		}
+	}
+
+	// 5. Тестируем несуществующий URL (ошибочный запрос)
+	fmt.Println("\n🔹 Тест: GET /unknown_path")
+	response, statusCode, err = postClient.GetShortURL(cfg.BaseURL + "/unknown_path")
+	if err == nil {
+		fmt.Printf("✅ Сервер вернул ошибку ожидаемо: %s (Код: %d)\n", response, statusCode)
+	} else {
+		fmt.Printf("❌ Ошибка обработки неизвестного пути: %v\n", err)
+	}
+
+	fmt.Println("\n✅ Все тесты завершены!")
 }

@@ -1,20 +1,21 @@
 package pinghandler
 
 import (
-   "net/http"
-   "local/internal/db"
-   "local/logger"
+	"local/internal/db"
+	"local/internal/storage"
+	"local/logger"
+	"net/http"
 
-   "go.uber.org/zap"
+	"go.uber.org/zap"
 )
 
 type PingHandler struct {
-   dbConnector *db.DbConnector
+   db storage.Storage
 }
 
-func NewPingHandler(dbConnector *db.DbConnector) *PingHandler {
+func NewPingHandler(db storage.Storage) *PingHandler {
    return &PingHandler{
-   	dbConnector: dbConnector,
+   	db: storage.Storage
    }
 }
 

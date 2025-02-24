@@ -14,7 +14,7 @@ func TestZstdCompress(t *testing.T) {
 		w.Write([]byte("Hello, world!"))
 	})
 
-	zstdCompress := ZstdCompress(nextHandler)
+	zstdCompress := Compression(nextHandler)
 
 	// Таблица тестов
 	tests := []struct {
@@ -63,7 +63,7 @@ func TestZstdDecompress(t *testing.T) {
 	})
 
 	
-	zstdDecompress := ZstdDecompress(nextHandler)
+	zstdDecompress := Decompression(nextHandler)
 
 	// Таблица тестов
 	tests := []struct {
