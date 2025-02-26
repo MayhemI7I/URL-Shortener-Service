@@ -56,7 +56,7 @@ func main() {
 	mux.Handle("/api/shorten", loghandler.WithLog(
 		zstd.Decompression(
 			zstd.Compression(
-				http.HandlerFunc(urlHandler.HandJsonPost),
+				http.HandlerFunc(urlHandler.HandlePost),
 			),
 		),
 	))

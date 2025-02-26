@@ -47,3 +47,6 @@ func (ms *MemoryStorage) Save(ctx context.Context, shortUrl, longUrl string) err
 func(ms *MemoryStorage) Close() error {
 	return nil
 }
+func(ms *MemoryStorage) IfExistUrl(LongURL string)(string, error)  {
+   ms.urls
+}

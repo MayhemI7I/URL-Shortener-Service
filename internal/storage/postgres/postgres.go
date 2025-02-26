@@ -1,16 +1,20 @@
 package postgres
 
 import (
+    "database/sql"
    "context"
    "fmt"
    "local/logger"
 
    "github.com/jmoiron/sqlx"
    "go.uber.org/zap"
+   "errors"
 
    _ "github.com/jackc/pgx/v5/stdlib"
 )
- 
+
+
+var ErrURLNotFound = errors.New("URL not found")
 type PostgresStorage struct {
    db *sqlx.DB
 }
@@ -87,19 +91,21 @@ func (pg *PostgresStorage) Save(ctx context.Context, shortURL string, longURL st
    return nil
 }
 
-func(pg *PostgresStorage) IfExistUrl(ctx context.Context, shortURL string) ( string, error) {
-	select {
-		case <-ctx.Done():
-			return  "",ctx.Err()
-		default:	
-	}
-	queryGet := `SELECT short_url FROM short_urls WHERE short_url = $1`
-	var longURL string
-	err := pg.db.GetContext(ctx, &longURL, queryGet, shortURL)
-	if err != nil {
-		logger.Log.Debug("error getting long url", zap.Error(err))
-		return "", err
-	}
-	return longURL, nil
-
+func (pg *PostgresStorage) IfExistUrl(ctx context.Context, shortURL string) (string, error) {
+   select {
+   case <-ctx.Done():
+   	return "", ctx.Err()
+   default:
+   }
+   queryGet := `SELECT short_url FROM short_urls WHERE short_url = $1`
+   var longURL string
+   err := pg.db.GetContext(ctx, &longURL, queryGet, shortURL)
+   if err != nil {
+   	if err == sql.ErrNoRows {
+   		return "", ErrURLNotFound // Если записи нет, возвращаем ошибку "не найдено"
+   	}
+   	logger.Log.Debug("error getting short URL", zap.Error(err))
+   	return "", err
+   }
+   return shortURL, nil
 }

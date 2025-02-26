@@ -3,11 +3,11 @@ package urlhandler
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"net/http"
 	"strings"
 	"time"
 
+	"local/internal/storage/postgres"
 	"local/logger"
 
 	"go.uber.org/zap"
@@ -39,7 +39,7 @@ type URLStorage interface {
 	Get(ctx context.Context, shortURL string) (string, error)
 	Save(ctx context.Context, shortURL, longURL string) error
 	Close() error
-	IfExistUrl(ctx context.Context, shortURL string) (bool, error)
+	IfExistUrl(ctx context.Context, shortURL string) (string, error)
 }
 
 // URLGenerator — интерфейс для генерации коротких URL.
@@ -81,73 +81,79 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 	logger.Log.Info("redirection", zap.String("to", longURL))
 }
 
-// HandlePost обрабатывает POST-запрос.
+
+// HandJsonPost обрабатывает JSON POST-запрос.
 func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil || len(body) == 0 {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+	var longURL string
+	// Обрабатываем FormData
+	if r.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
+			return
+		}
+		longURL = r.FormValue("url")
+	} else {
+		// Обрабатываем JSON
+		var req URLRequest
+		dec := json.NewDecoder(r.Body)
+		if err := dec.Decode(&req); err != nil {
+			http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+			return
+		}
+		longURL = req.LongURL
+	}
+
+	// Проверяем, существует ли уже короткий URL для этого длинного
+	shortURL, err := h.storage.IfExistUrl(ctx, longURL)
+	if err != nil && err != postgres.ErrURLNotFound {
+		http.Error(w, "Error checking for existing short URL", http.StatusInternalServerError)
 		return
 	}
 
-	longURL := string(body)
-	shortURL, err := h.urlGenerator.GenerateShortURL(longURL)
+	// Если короткий URL уже существует, возвращаем его
+	if shortURL != "" {
+		if r.Header.Get("Content-Type") == "application/json" {
+			// Для JSON возвращаем ответ в формате JSON
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(URLRequest{ShortURL: shortURL, LongURL: longURL})
+		} else {
+			// Для FormData возвращаем просто текст
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(shortURL))
+		}
+		return
+	}
+
+	// Генерируем новый короткий URL
+	shortURL, err = h.urlGenerator.GenerateShortURL(longURL)
 	if err != nil {
 		http.Error(w, "Error generating short URL", http.StatusInternalServerError)
 		return
 	}
 
+	// Сохраняем новый короткий URL в базе данных
 	err = h.storage.Save(ctx, shortURL, longURL)
 	if err != nil {
 		http.Error(w, "Error saving URL", http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(shortURL))
-}
-
-// HandJsonPost обрабатывает JSON POST-запрос.
-func (h *URLHandler) HandJsonPost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
+	// Возвращаем короткий URL
+	if r.Header.Get("Content-Type") == "application/json" {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(URLRequest{ShortURL: shortURL, LongURL: longURL})
+	} else {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte(shortURL))
 	}
-
-	ctx := r.Context()
-
-	var req URLRequest
-	dec := json.NewDecoder(r.Body)
-	if err := dec.Decode(&req); err != nil {
-		logger.Log.Error("Error decoding request", zap.Error(err))
-		http.Error(w, "Error decoding request", http.StatusBadRequest)
-		return
-	}
-	shortURL, err := h.storage.IfExistUrl(ctx, req.LongURL)
-    
-
-
-	shortURL, err := h.urlGenerator.GenerateShortURL(req.LongURL)
-	if err != nil {
-		logger.Log.Error("Error generating short URL", zap.Error(err))
-		http.Error(w, "Error generating short URL", http.StatusInternalServerError)
-		return
-	}
-
-	err = h.storage.Save(ctx, shortURL, req.LongURL)
-	if err != nil {
-		logger.Log.Error("Error saving URL", zap.Error(err))
-		http.Error(w, "Error saving URL", http.StatusInternalServerError)
-		return
-	}
-
-	req.ShortURL = shortURL
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(req)
 }
 
 func (h *URLHandler) HandURL(w http.ResponseWriter, r *http.Request) {
