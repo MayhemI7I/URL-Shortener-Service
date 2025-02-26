@@ -5,56 +5,58 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"local/internal/storage/postgres"
 	"local/logger"
 	"log"
 	"os"
 	"sync"
 )
 
-type FileStorage struct {
-	urls map[string]string
-	mu   sync.Mutex
-	file *os.File
+type Storage struct {
+	urls     map[string]string
+	longURLs map[string]string
+	mu       sync.Mutex
+	file     *os.File
 }
 
-func (us *FileStorage) Load() error {
+func (us *Storage) Load() error {
 	us.mu.Lock()
 	defer us.mu.Unlock()
+
 	decoder := json.NewDecoder(us.file)
-	for {
-		var entry map[string]string
-		if err := decoder.Decode(&entry); err != nil {
-			if err == io.EOF {
-				break
-			}
-			return err
-		}
-		for key, value := range entry {
-			us.urls[key] = value
-		}
+	if err := decoder.Decode(&us.urls); err != nil && err != io.EOF {
+		return err
 	}
+
+	// Восстанавливаем `longURLs` для быстрого поиска по длинному URL
+	us.longURLs = make(map[string]string)
+	for short, long := range us.urls {
+		us.longURLs[long] = short
+	}
+
 	return nil
 }
 
-func NewFileStorage(filename string) (*FileStorage, error) {
+func NewFileStorage(filename string) (*Storage, error) {
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		return nil, err
 	}
-	storage := &FileStorage{
-		urls: make(map[string]string),
-		mu:   sync.Mutex{},
-		file: file,
+	storage := &Storage{
+		urls:     make(map[string]string),
+		longURLs: make(map[string]string),
+		mu:       sync.Mutex{},
+		file:     file,
 	}
 	storage.Load()
 	return storage, nil
 }
 
-func (us *FileStorage) Close() error {
+func (us *Storage) Close() error {
 	return us.file.Close()
 }
 
-func (us *FileStorage) Save(ctx context.Context, shortURL, longURL string) error {
+func (us *Storage) Save(ctx context.Context, shortURL, longURL string) error {
 	select {
 	case <-ctx.Done():
 		return ctx.Err() // Возвращаем ошибку, если контекст отменён
@@ -90,7 +92,7 @@ func (us *FileStorage) Save(ctx context.Context, shortURL, longURL string) error
 	return nil
 }
 
-func (us *FileStorage) Get(ctx context.Context, shortUrl string) (string, error) {
+func (us *Storage) Get(ctx context.Context, shortUrl string) (string, error) {
 	select {
 	case <-ctx.Done():
 		return "", ctx.Err()
@@ -111,4 +113,20 @@ func (us *FileStorage) Get(ctx context.Context, shortUrl string) (string, error)
 
 	logger.Log.Info("Retrieved: %s -> %s", shortUrl, value)
 	return value, nil
+}
+
+func (us *Storage) FindByLongURL(ctx context.Context, longURL string) (string, error) {
+	select {
+	case <-ctx.Done():
+		return "", ctx.Err()
+	default:
+	}
+	us.mu.Lock()
+	defer us.mu.Unlock()
+	shortURL, ok := us.longURLs[longURL]
+	if !ok {
+		return "", postgres.ErrURLNotFound
+	}
+	return shortURL, nil
+
 }

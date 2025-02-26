@@ -3,6 +3,7 @@ package urlhandler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -23,16 +24,14 @@ func NewURLRequest(longURL string) *URLRequest {
 
 	return &URLRequest{
 		ShortURL: "",
-		LongURL: longURL,
+		LongURL:  longURL,
 	}
- 
+
 }
 
-
-func(r *URLRequest)Encode()([]byte, error){
+func (r *URLRequest) Encode() ([]byte, error) {
 	return json.Marshal(r)
 }
-
 
 // URLStorage — интерфейс для хранения URL.
 type URLStorage interface {
@@ -67,7 +66,7 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 	logger.Log.Info("shortURL", zap.String("shortURL", shortURL))
 	longURL, err := h.storage.Get(ctx, shortURL)
 	if err != nil {
-		if err == context.DeadlineExceeded {
+		if errors.Is(err, context.DeadlineExceeded) {
 			http.Error(w, "Request timeout", http.StatusRequestTimeout)
 		} else {
 			logger.Log.Error("URL not found", zap.Error(err))
@@ -81,8 +80,7 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 	logger.Log.Info("redirection", zap.String("to", longURL))
 }
 
-
-// HandJsonPost обрабатывает JSON POST-запрос.
+// HandlePost обрабатывает JSON POST-запрос.
 func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
@@ -109,7 +107,7 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 
 	// Проверяем, существует ли уже короткий URL для этого длинного
 	shortURL, err := h.storage.IfExistUrl(ctx, longURL)
-	if err != nil && err != postgres.ErrURLNotFound {
+	if err != nil && !errors.Is(err, postgres.ErrURLNotFound) {
 		http.Error(w, "Error checking for existing short URL", http.StatusInternalServerError)
 		return
 	}
@@ -120,12 +118,18 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 			// Для JSON возвращаем ответ в формате JSON
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(URLRequest{ShortURL: shortURL, LongURL: longURL})
+			err := json.NewEncoder(w).Encode(URLRequest{ShortURL: shortURL, LongURL: longURL})
+			if err != nil {
+				return
+			}
 		} else {
 			// Для FormData возвращаем просто текст
 			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(shortURL))
+			_, err := w.Write([]byte(shortURL))
+			if err != nil {
+				return
+			}
 		}
 		return
 	}
@@ -148,11 +152,17 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Content-Type") == "application/json" {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(URLRequest{ShortURL: shortURL, LongURL: longURL})
+		err := json.NewEncoder(w).Encode(URLRequest{ShortURL: shortURL, LongURL: longURL})
+		if err != nil {
+			return
+		}
 	} else {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte(shortURL))
+		_, err := w.Write([]byte(shortURL))
+		if err != nil {
+			return
+		}
 	}
 }
 

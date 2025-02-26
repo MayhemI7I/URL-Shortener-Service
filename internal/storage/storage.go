@@ -11,7 +11,7 @@ import (
 type Storage interface {
 	Get(ctx context.Context, shortUrl string) (string, error)
 	Save(ctx context.Context, shortUrl, longUrl string) error
-	IfExistUrl(context.Context, string) (string, error)
+	FindByLongURL(context.Context, string) (string, error)
 	Close() error
 }
 
