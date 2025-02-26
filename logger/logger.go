@@ -21,13 +21,14 @@ func InitLogger(logLevel string) {
 	}
 
 	// Форматирование логов
-	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig := zap.NewDevelopmentEncoderConfig()
 	encoderConfig.TimeKey = "timestamp"
-	encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("02-01-2006 15:04:05") // Читаемое время
+	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	encoderConfig.EncodeLevel =zapcore.CapitalColorLevelEncoder
 
 	// Для консоли
 	consoleEncoder := zapcore.NewConsoleEncoder(encoderConfig)
-	consoleWriter := zapcore.AddSync(os.Stdout)
+	consoleWriter := zapcore.AddSync(zapcore.Lock(os.Stdout))
 
 	// Для файла
 	fileEncoder := zapcore.NewJSONEncoder(encoderConfig)
@@ -35,7 +36,7 @@ func InitLogger(logLevel string) {
 	if err != nil {
 		panic("Не удалось создать файл для логов: " + err.Error())
 	}
-	fileWriter := zapcore.AddSync(logFile)
+	fileWriter := zapcore.AddSync(zapcore.Lock(logFile))
 
 	// Создаем Core с консолью и файлом
 	core := zapcore.NewTee(

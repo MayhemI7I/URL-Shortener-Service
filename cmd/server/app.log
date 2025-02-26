@@ -45,3 +45,47 @@
 {"level":"error","timestamp":"24-02-2025 21:41:11","msg":"URL not found{error 26 0  URL not found in storage}"}
 {"level":"info","timestamp":"24-02-2025 21:41:11","msg":"shortURL{shortURL 15 0 unknown_path <nil>}"}
 {"level":"error","timestamp":"24-02-2025 21:41:11","msg":"URL not found{error 26 0  URL not found in storage}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:02.863+0300","M":"DB and tables is ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:02.878+0300","M":"2025-02-26 14:14:02Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:43.164+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T14:14:43.177+0300","M":"URL not found{error 26 0  sql: Scan error on column index 0, name \"long_url\": destination not a pointer}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:43.178+0300","M":"Generated short URL: Mmez9QpH"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:43.185+0300","M":"Generated short URL: 75wQ0DOC"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:43.186+0300","M":"shortURL{shortURL 15 0 75wQ0DOC <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T14:14:43.187+0300","M":"URL not found{error 26 0  sql: Scan error on column index 0, name \"long_url\": destination not a pointer}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:43.187+0300","M":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T14:14:43.188+0300","M":"URL not found{error 26 0  sql: no rows in result set}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T14:50:43.463+0300","M":"sql: unknown driver \"pgx\" (forgotten import?)"}
+{"L":"\u001b[31mFATAL\u001b[0m","timestamp":"2025-02-26T14:50:43.478+0300","M":"failed to initialize application: sql: unknown driver \"pgx\" (forgotten import?)"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T14:51:09.159+0300","M":"sql: unknown driver \"pgx\" (forgotten import?)"}
+{"L":"\u001b[31mFATAL\u001b[0m","timestamp":"2025-02-26T14:51:09.175+0300","M":"failed to initialize application: sql: unknown driver \"pgx\" (forgotten import?)"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:55:31.180+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:55:31.195+0300","M":"2025-02-26 14:55:31Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:19.787+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:19.793+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:19.794+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.819+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.819+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:19.820+0300","M":"Generated short URL: BPjqMe4C"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.825+0300","M":"Error saving URL{error 26 0  ОШИБКА: нет уникального ограничения или ограничения-исключения, соответствующего указанию ON CONFLICT (SQLSTATE 42P10)}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:19.826+0300","M":"Generated short URL: yKzGTPlo"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:19.827+0300","M":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.827+0300","M":"short URL not found{short_url 15 0 unknown_path <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.827+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:19.645+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:19.660+0300","M":"2025-02-26 15:10:19Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.355+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.358+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.358+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.358+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.359+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.359+0300","M":"Generated short URL: abZHQWjW"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.363+0300","M":"Generated short URL: qFxSGRCL"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.365+0300","M":"shortURL{shortURL 15 0 qFxSGRCL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.365+0300","M":"redirection{to 15 0 url=ll%2Cknl%2Cnml. <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.365+0300","M":"shortURL{shortURL 15 0 url=ll,knl,nml. <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.366+0300","M":"short URL not found{short_url 15 0 url=ll,knl,nml. <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.366+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.367+0300","M":"shortURL{shortURL 15 0 unknown_path <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.367+0300","M":"short URL not found{short_url 15 0 unknown_path <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.368+0300","M":"URL not found{error 26 0  short URL not found}"}

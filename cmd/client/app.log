@@ -16,3 +16,8 @@
 {"level":"error","timestamp":"24-02-2025 21:37:46","msg":"GET error: Get \"http://localhost:8080/unknown_path\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"}
 {"level":"info","timestamp":"24-02-2025 21:41:10","msg":"Starting client"}
 {"level":"error","timestamp":"24-02-2025 21:41:11","msg":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T14:14:38.789+0300","M":"Starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:05:18.032+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.825+0300","M":"Server returned error: 500 Internal Server Error, Error saving URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.826+0300","M":"Server returned error: 500 Internal Server Error, Error saving URL"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:27.556+0300","M":"Starting client"}

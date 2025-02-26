@@ -19,10 +19,27 @@ type URLRequest struct {
 	LongURL  string `json:"long_url"`
 }
 
+func NewURLRequest(longURL string) *URLRequest {
+
+	return &URLRequest{
+		ShortURL: "",
+		LongURL: longURL,
+	}
+ 
+}
+
+
+func(r *URLRequest)Encode()([]byte, error){
+	return json.Marshal(r)
+}
+
+
 // URLStorage — интерфейс для хранения URL.
 type URLStorage interface {
 	Get(ctx context.Context, shortURL string) (string, error)
 	Save(ctx context.Context, shortURL, longURL string) error
+	Close() error
+	IfExistUrl(ctx context.Context, shortURL string) (bool, error)
 }
 
 // URLGenerator — интерфейс для генерации коротких URL.
@@ -105,26 +122,32 @@ func (h *URLHandler) HandJsonPost(w http.ResponseWriter, r *http.Request) {
 	var req URLRequest
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(&req); err != nil {
+		logger.Log.Error("Error decoding request", zap.Error(err))
 		http.Error(w, "Error decoding request", http.StatusBadRequest)
 		return
 	}
+	shortURL, err := h.storage.IfExistUrl(ctx, req.LongURL)
+    
+
 
 	shortURL, err := h.urlGenerator.GenerateShortURL(req.LongURL)
 	if err != nil {
+		logger.Log.Error("Error generating short URL", zap.Error(err))
 		http.Error(w, "Error generating short URL", http.StatusInternalServerError)
 		return
 	}
 
 	err = h.storage.Save(ctx, shortURL, req.LongURL)
 	if err != nil {
+		logger.Log.Error("Error saving URL", zap.Error(err))
 		http.Error(w, "Error saving URL", http.StatusInternalServerError)
 		return
 	}
 
-	response := map[string]string{"result": shortURL}
+	req.ShortURL = shortURL
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(req)
 }
 
 func (h *URLHandler) HandURL(w http.ResponseWriter, r *http.Request) {

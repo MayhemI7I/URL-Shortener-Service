@@ -2,13 +2,16 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+
 	"local/config"
+	"local/handlers/urlhandler"
 	"local/logger"
 	"os"
 	"strings"
 	"time"
-
+	
 	"github.com/go-resty/resty/v2"
 )
 
@@ -17,11 +20,12 @@ type ClientReq struct {
 	request *resty.Client
 }
 
+
 // POST JSON (API)
-func (c *ClientReq) PostJSON(url, longURL string) (string, int, error) {
+func (c *ClientReq) PostJSON(url string, json []byte) (string, int, error) {
 	response, err := c.request.R().
 		SetHeader("Content-Type", "application/json").
-		SetBody(map[string]string{"url": longURL}).
+		SetBody(json).
 		Post(url)
 
 	if err != nil {
@@ -106,6 +110,8 @@ func main() {
 	if err != nil {
 		logger.Log.Fatalf("error: %s", err.Error())
 	}
+	r := urlhandler.NewURLRequest(longURL)
+
 
 	// Создание HTTP клиента
 	client := resty.New()
@@ -129,7 +135,12 @@ func main() {
 
 	// 2. Тестируем создание короткого URL через JSON (POST /api/shorten)
 	fmt.Println("\n🔹 Тест: POST /api/shorten (JSON)")
-	response, statusCode, err = postClient.PostJSON(cfg.BaseURL+"/api/shorten", longURL)
+
+	n, err := json.Marshal(r)
+	if err != nil {
+		logger.Log.Fatalf("error: %s", err.Error())
+	}
+	response, statusCode, err = postClient.PostJSON(cfg.BaseURL+"/api/shorten",n )
 	if err == nil {
 		fmt.Printf("✅ Короткий URL создан: %s (Код: %d)\n", response, statusCode)
 	} else {
