@@ -24,6 +24,6 @@ func (gen *GeneratorShortURL) GenerateShortURL(longurl string) (string, error) {
    if len(shortURL) < int(gen.lenght) {
    	return "", errors.New("generated short URL is too short")
    }
-   logger.Log.Info("Generated short URL: ", shortURL[:gen.lenght])
+   logger.Log.Debug("Generated short URL: ", shortURL[:gen.lenght])
    return shortURL[:gen.lenght], nil
 }

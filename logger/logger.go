@@ -24,7 +24,7 @@ func InitLogger(logLevel string) {
 	encoderConfig := zap.NewDevelopmentEncoderConfig()
 	encoderConfig.TimeKey = "timestamp"
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	encoderConfig.EncodeLevel =zapcore.CapitalColorLevelEncoder
+	encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 
 	// Для консоли
 	consoleEncoder := zapcore.NewConsoleEncoder(encoderConfig)

@@ -27,7 +27,7 @@ func InitConfig() *Config {
 	pflag.StringVarP(&cfg.ServerAdress, "server-address", "s", "localhost", "Server address")
 	pflag.StringVarP(&cfg.ServerPort, "server-port", "p", "8080", "Server port")
 	pflag.StringVarP(&cfg.BaseURL, "base-url", "b", "http://localhost:8080", "Base URL for return server")
-	pflag.StringVar(&cfg.LogLevel, "log-level", "1", "Log level")
+	pflag.StringVar(&cfg.LogLevel, "log-level", "debug", "Log level")
 	pflag.StringVarP(&cfg.FileStorage, "file-storage", "f", "short-url-db.json", "Path to file storage")
 	pflag.StringVarP(&cfg.DataBaseDSN, "database-dsn", "d", "postgres://postgres:1@localhost:5432/usvideos", "PostgreSQL DSN")
 	pflag.Uint16VarP(&cfg.URLLength, "url-length", "l", 8, "URL length")

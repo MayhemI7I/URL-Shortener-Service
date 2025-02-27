@@ -89,3 +89,141 @@
 {"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:29.367+0300","M":"shortURL{shortURL 15 0 unknown_path <nil>}"}
 {"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.367+0300","M":"short URL not found{short_url 15 0 unknown_path <nil>}"}
 {"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:10:29.368+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:19:49.699+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:19:49.714+0300","M":"2025-02-27 11:19:49Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:20:28.566+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:20:28.568+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:20:28.569+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:20:28.569+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:20:28.570+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:20:28.572+0300","M":"Generated short URL: S6wnOTvd"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:20:28.574+0300","M":"Generated short URL: U4IjUpoK"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:28.738+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:28.753+0300","M":"2025-02-27 11:34:28Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:37.749+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:37.752+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:37.752+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:34:37.752+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:34:37.753+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.933+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.934+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.935+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:34:58.935+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:34:58.935+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.940+0300","M":"Generated short URL: BHUN1dB-"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.941+0300","M":"Generated short URL: DXYEiFw2"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.942+0300","M":"Generated short URL: i7uYLqR5"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.944+0300","M":"Generated short URL: BHUN1dB-"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.945+0300","M":"Generated short URL: DXYEiFw2"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:58.946+0300","M":"Generated short URL: i7uYLqR5"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:21.657+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:21.672+0300","M":"2025-02-27 11:43:21Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:34.549+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:34.552+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:34.552+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.552+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.553+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:34.625+0300","M":"Generated short URL: 7SRWkU5I"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.626+0300","M":"Ошибка после функции{error 26 0  URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:34.628+0300","M":"Generated short URL: 7SRWkU5I"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.628+0300","M":"Ошибка после функции{error 26 0  URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:48:55.017+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:48:55.032+0300","M":"2025-02-27 11:48:55Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:12.341+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:12.344+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:12.344+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:12.344+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:12.345+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:12.347+0300","M":"Ошибка после функции{error 26 0  invalid URL for generate}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:12.348+0300","M":"Generated short URL: HgmHBBlP"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:45.941+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:45.942+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:45.942+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:45.942+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:45.942+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:56.389+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:56.390+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:56.390+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:56.391+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:56.391+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:56.392+0300","M":"Ошибка после функции{error 26 0  invalid URL for generate}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:56.393+0300","M":"Generated short URL: PYcL1OHe"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:56.396+0300","M":"Generated short URL: KjFtmbYh"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:02:38.762+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:02:38.777+0300","M":"2025-02-27 13:02:38Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:02:53.222+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:02:53.225+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:02:53.225+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:02:53.226+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:02:53.226+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:02:53.227+0300","M":"Ошибка после функции{error 26 0  invalid URL for generate} { 15 0  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:02:53.229+0300","M":"Generated short URL: eWVbGaoj"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:22.987+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:23.002+0300","M":"2025-02-27 13:26:23Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:32.388+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:32.391+0300","M":"redirection{to 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:32.392+0300","M":"shortURL{shortURL 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:26:32.393+0300","M":"short URL not found{short_url 15 0 url=ascacavabsadbsdbffgsmjuyr8767khjk <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:26:32.393+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:26:32.394+0300","M":"Ошибка после функции{error 26 0  invalid URL for generate} { 15 0  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:32.396+0300","M":"Generated short URL: BpaQDelP"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:32.400+0300","M":"Generated short URL: BpaQDelP"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:52:37.222+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:52:37.237+0300","M":"2025-02-27 13:52:37Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:53:11.269+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:53:11.271+0300","M":"short URL not found{short_url 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:53:11.271+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.271+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"2.658ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.273+0300","M":"error getting short URL{error 26 0  ОШИБКА: отношение \"short_urls\" не существует (SQLSTATE 42P01)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.273+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"511.8µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.274+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.275+0300","M":"error getting short URL{error 26 0  ОШИБКА: отношение \"short_urls\" не существует (SQLSTATE 42P01)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.275+0300","M":"request","uri":"/","method":"POST","duration":"638.6µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.276+0300","M":"error getting short URL{error 26 0  ОШИБКА: отношение \"short_urls\" не существует (SQLSTATE 42P01)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:53:11.276+0300","M":"request","uri":"/","method":"POST","duration":"558.4µs"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:54:46.981+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:54:46.981+0300","M":"short URL not found{short_url 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:54:46.982+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:54:46.982+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"1.0293ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:54:46.983+0300","M":"error getting short URL{error 26 0  ОШИБКА: отношение \"short_urls\" не существует (SQLSTATE 42P01)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:54:46.983+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:54:46.985+0300","M":"error getting short URL{error 26 0  ОШИБКА: отношение \"short_urls\" не существует (SQLSTATE 42P01)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:54:46.985+0300","M":"request","uri":"/","method":"POST","duration":"515.8µs"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:55:36.962+0300","M":"DB and tables are ready"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:55:36.977+0300","M":"2025-02-27 13:55:36Server started on localhost:8080"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:55:49.364+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:55:49.367+0300","M":"short URL not found{short_url 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:55:49.367+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.367+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"2.724ms"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:55:49.369+0300","M":"Ошибка после функции{error 26 0  invalid URL for generate} { 15 0  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.373+0300","M":"short url saved{shortURL 15 0  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.373+0300","M":"Generated short URL: 4PQzlea7"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.373+0300","M":"short url saved{shortURL 15 0 4PQzlea7 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.374+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"5.5546ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.375+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.376+0300","M":"Generated short URL: 4PQzlea7"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.376+0300","M":"short url saved{shortURL 15 0 4PQzlea7 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T13:55:49.376+0300","M":"request","uri":"/","method":"POST","duration":"1.0632ms"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T14:15:49.973+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:15:49.974+0300","M":"short URL not found{short_url 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:15:49.974+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:15:49.974+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"1.1647ms"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:15:49.976+0300","M":"Ошибка после функции{error 26 0  invalid URL for generate} { 15 0  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:15:49.978+0300","M":"short url saved{shortURL 15 0  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:15:49.978+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"2.8457ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:15:49.978+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T14:24:09.220+0300","M":"shortURL{shortURL 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:24:09.221+0300","M":"short URL not found{short_url 15 0 Ph-VaNhL <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:24:09.221+0300","M":"URL not found{error 26 0  short URL not found}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.221+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"1.1405ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.222+0300","M":"Generated short URL: egUDrDEl"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.225+0300","M":"short url saved{shortURL 15 0 egUDrDEl <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.225+0300","M":"Generated short URL: 4txi_2vM"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.226+0300","M":"short url saved{shortURL 15 0 4txi_2vM <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.226+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"3.4337ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.227+0300","M":"Generated short URL: egUDrDEl"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.227+0300","M":"short url saved{shortURL 15 0 egUDrDEl <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.227+0300","M":"request","uri":"/","method":"POST","duration":"516µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.228+0300","M":"Generated short URL: 4txi_2vM"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.228+0300","M":"short url saved{shortURL 15 0 4txi_2vM <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.228+0300","M":"request","uri":"/","method":"POST","duration":"0s"}

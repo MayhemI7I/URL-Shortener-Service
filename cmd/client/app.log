@@ -21,3 +21,38 @@
 {"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.825+0300","M":"Server returned error: 500 Internal Server Error, Error saving URL"}
 {"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-26T15:05:19.826+0300","M":"Server returned error: 500 Internal Server Error, Error saving URL"}
 {"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-26T15:10:27.556+0300","M":"Starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:20:16.203+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:20:28.571+0300","M":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:20:28.571+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:36.001+0300","M":"Starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:34:51.140+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:34:58.944+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:43:28.006+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.626+0300","M":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.627+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:43:34.628+0300","M":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:07.582+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:12.347+0300","M":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:12.348+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:43.838+0300","M":"Starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:49:48.501+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:56.392+0300","M":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T11:49:56.393+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T11:52:33.720+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:02:53.227+0300","M":"Server returned error: 500 Internal Server Error, Error generating short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:02:53.228+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:26:29.206+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:26:32.399+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:52:58.427+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:53:11.273+0300","M":"Server returned error: 500 Internal Server Error, Error checking for existing short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:53:11.274+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:53:11.275+0300","M":"Server returned error: 500 Internal Server Error, Error checking for existing short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:53:11.276+0300","M":"Server returned error: 500 Internal Server Error, Error checking for existing short URL"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:54:44.615+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:54:46.984+0300","M":"Server returned error: 500 Internal Server Error, Error checking for existing short URL"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:54:46.986+0300","M":"Server returned error: 500 Internal Server Error, Error checking for existing short URL"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T13:55:45.276+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T13:55:49.375+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T14:15:44.175+0300","M":"Starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:15:49.979+0300","M":"Server returned error: 400 Bad Request, URL is required"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T14:23:55.113+0300","M":"Starting client"}
