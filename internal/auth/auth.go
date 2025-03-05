@@ -8,37 +8,34 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	
 )
 
-
-
-func SetJWTCookie(w http.ResponseWriter, token string, secretKey *config.Config)(error) {
-	accsesToken, err := GenerateAccessToken(token, secretKey)
+func SetJWTCookie(w http.ResponseWriter, token string, secretKey *config.Config) error {
+	accessToken, err := GenerateAccessToken(token, secretKey)
 	if err != nil {
 		return err
 	}
-	refreshToken, err := GenerateRefresToken(token)
+	refreshToken, err := GenerateRefreshToken(token)
 	if err != nil {
 		return err
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name: "accses_token",
-		Value: accsesToken,
-		Path: "/",
-		MaxAge: int(15 * time.Minute),
+		Name:     "access_token",
+		Value:    accessToken,
+		Path:     "/",
+		MaxAge:   int(15 * time.Minute),
 		HttpOnly: true,
-		Secure: true,
+		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	})
-	http.SetCookie(w,  &http.Cookie{
-		Name: "refreshToken",
-		Value: refreshToken,
-		Path: "/",
-		MaxAge: int(24 * time.Hour),
+	http.SetCookie(w, &http.Cookie{
+		Name:     "refreshToken",
+		Value:    refreshToken,
+		Path:     "/",
+		MaxAge:   int(24 * time.Hour),
 		HttpOnly: true,
-		Secure: true,
+		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	})
 
@@ -46,11 +43,11 @@ func SetJWTCookie(w http.ResponseWriter, token string, secretKey *config.Config)
 
 }
 
-
-type Claims struct{
+type Claims struct {
 	UserId string `json:"user_id"`
 	jwt.RegisteredClaims
 }
+
 func GenerateAccessToken(userId string, secretKey *config.Config) (string, error) {
 	sKey := secretKey.JWTSecretKey
 
@@ -71,7 +68,7 @@ func GenerateAccessToken(userId string, secretKey *config.Config) (string, error
 	return tokenString, nil
 }
 
-func GenerateRefresToken(userId string)(string, error){
+func GenerateRefreshToken(userId string) (string, error) {
 	b := make([]byte, 16)
 	_, err := rand.Read(b)
 	if err != nil {
@@ -80,8 +77,3 @@ func GenerateRefresToken(userId string)(string, error){
 	stringToken := hex.EncodeToString(b)
 	return stringToken, nil
 }
-
-
- 
-	
-
