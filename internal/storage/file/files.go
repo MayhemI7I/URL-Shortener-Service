@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"local/domain"
 	"local/internal/storage/postgres"
 	"local/logger"
 	"log"
@@ -13,7 +14,7 @@ import (
 )
 
 type Storage struct {
-	urls     map[string]string
+	urls     map[string]domain.URLData
 	longURLs map[string]string
 	mu       sync.Mutex
 	file     *os.File

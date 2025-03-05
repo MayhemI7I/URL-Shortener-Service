@@ -1,42 +1,20 @@
 package urlhandler
 
 import (
-   "context"
-   "encoding/json"
-   "errors"
-   "net/http"
-   "strings"
-   "time"
+	"context"
+	"encoding/json"
+	"errors"
+	"net/http"
+	"strings"
+	"time"
 
-   "local/internal/storage/postgres"
-   "local/logger"
+	"local/domain"
+	"local/internal/storage"
+	"local/internal/storage/postgres"
+	"local/logger"
 
-   "go.uber.org/zap"
+	"go.uber.org/zap"
 )
-
-// URLRequest представляет запрос на URL.
-type URLRequest struct {
-   ShortURL string `json:"short_url"`
-   OrigURL  string `json:"orig_url"`
-}
-
-func NewURLRequest(origURL string) *URLRequest {
-
-   return &URLRequest{
-   	ShortURL: "",
-   	OrigURL:  origURL,
-   }
-
-}
-
-
-// URLStorage — интерфейс для хранения URL.
-type URLStorage interface {
-   Get(ctx context.Context, shortURL string) (string, error)
-   Save(ctx context.Context, shortURL, origURL string) error
-   Close() error
-   FindByLongURL(ctx context.Context, shortURL string) (string, error)
-}
 
 // URLGenerator — интерфейс для генерации коротких URL.
 type URLGenerator interface {
@@ -45,12 +23,12 @@ type URLGenerator interface {
 
 // URLHandler — обработчик для работы с URL.
 type URLHandler struct {
-   storage      URLStorage
+   storage      storage.Storage
    urlGenerator URLGenerator
 }
 
 // NewURLHandler создает новый URLHandler.
-func NewURLHandler(storage URLStorage, urlGenerator URLGenerator) *URLHandler {
+func NewURLHandler(storage storage.Storage, urlGenerator URLGenerator) *URLHandler {
    return &URLHandler{storage: storage, urlGenerator: urlGenerator}
 }
 
@@ -89,8 +67,8 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
    }()
 
    var origUrl string
-   requestURLs := make([]URLRequest, 0)
-   responseURLs := make([]URLRequest, 0)
+   requestURLs := make([]domain.URLData, 0)
+   responseURLs := make([]domain.URLData, 0)
 
    contentType := r.Header.Get("Content-Type")
 
@@ -106,7 +84,7 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
    		http.Error(w, "URL is required", http.StatusBadRequest)
    		return
    	}
-   	requestURLs = append(requestURLs, URLRequest{OrigURL: origUrl})
+   	requestURLs = append(requestURLs, domain.URLData{URLPair: domain.URLPair{OrigURL: origUrl}})
 
    	// Обработка JSON
    } else if contentType == "application/json" {
@@ -123,7 +101,7 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 
    // Создание сокращенных URL для каждого из запросов
    for _, url := range requestURLs {
-   	shortURL, err := h.storage.FindByLongURL(ctx, url.OrigURL)
+   	shortURL, err := h.storage.FindByLongURL(ctx, url.OrigURL, url.UserID)
    	if err != nil && !errors.Is(err, postgres.ErrURLNotFound) {
    		http.Error(w, "Error checking for existing short URL", http.StatusInternalServerError)
    		return
@@ -131,17 +109,17 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 
    	// Если короткий URL уже существует, добавляем его в ответ
    	if shortURL != "" {
-   		responseURLs = append(responseURLs, URLRequest{ShortURL: shortURL, OrigURL: url.OrigURL})
+   		responseURLs = append(responseURLs, domain.URLData{URLPair: domain.URLPair{ShortURL: shortURL, OrigURL: url.OrigURL}})
    	} else {
    		shortURL, err = h.urlGenerator.GenerateShortURL(url.OrigURL)
-   		if err != nil && !errors.Is(err, postgres.ErrURLNotFound) {
+   		if err != nil && !errors.Is(err, domain.ErrURLNotFound) {
    			logger.Log.Error("Ошибка после функции", zap.Error(err), zap.String(url.OrigURL, shortURL))
    		}
 
-   		responseURLs = append(responseURLs, URLRequest{ShortURL: shortURL, OrigURL: url.OrigURL})
+   		responseURLs = append(responseURLs, domain.URLData{URLPair: domain.URLPair{ShortURL: shortURL, OrigURL: url.OrigURL}})
 
    		// Сохранение нового URL в базу данных
-   		err = h.storage.Save(ctx, shortURL, url.OrigURL)
+   		err = h.storage.Save(ctx, shortURL, url.OrigURL, url.UserID)
    		if err != nil {
    			http.Error(w, "Error saving URL", http.StatusInternalServerError)
    			return

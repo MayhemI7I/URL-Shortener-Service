@@ -17,6 +17,7 @@ type Config struct {
 	FileStorage  string
 	DataBaseDSN  string
 	URLLength    uint16
+	JWTSecretKey    string
 }
 
 // InitConfig initializes the configuration for the application.
@@ -31,6 +32,7 @@ func InitConfig() *Config {
 	pflag.StringVarP(&cfg.FileStorage, "file-storage", "f", "short-url-db.json", "Path to file storage")
 	pflag.StringVarP(&cfg.DataBaseDSN, "database-dsn", "d", "postgres://postgres:1@localhost:5432/usvideos", "PostgreSQL DSN")
 	pflag.Uint16VarP(&cfg.URLLength, "url-length", "l", 8, "URL length")
+	pflag.StringVarP(&cfg.JWTSecretKey, "jwt-secret", "j", "secret", "JWT secret")
 	// Override configuration with environment variables if they are set
 	if envServerAdress := os.Getenv("SERVER_ADDRESS"); envServerAdress != "" {
 		cfg.ServerAdress = envServerAdress
@@ -56,6 +58,9 @@ func InitConfig() *Config {
 	if envDataBaseDSN := os.Getenv("DATABASE_DSN"); envDataBaseDSN != "" {
 		cfg.DataBaseDSN = envDataBaseDSN
 		logger.Log.Infof("DATABASE_DSN set to ", zap.String("database", envDataBaseDSN))
+	}
+	if envJWTSecret := os.Getenv("JWT_SECRET"); envJWTSecret != "" {
+		cfg.JWTSecretKey = envJWTSecret
 	}
 
 	// Parse command-line flags
