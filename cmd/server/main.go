@@ -60,6 +60,7 @@ func main() {
 			),
 		),
 	))
+	mux.Handle("/apu/users/urls", urlhandler.HandleGetUserURLs)
 
 	// Запускаем сервер
 	if err := runServer(cfg, mux); err != nil {

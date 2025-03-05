@@ -18,15 +18,7 @@ import (
 type ClientReq struct {
 	request *resty.Client
 }
-cookie := http.Cocie{
-	Name:     "jwtAuth",
-	Value:    "value",
-	Path:     "/",
-	Domain:   "domain",
-	Expires:  time.Now(),
-	HTTPOnly: true,
- 
-}
+
 
 // POST JSON (API)
 func (c *ClientReq) PostJSON(url string, json []byte) (string, int, error) {
