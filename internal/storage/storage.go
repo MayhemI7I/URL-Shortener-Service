@@ -2,11 +2,11 @@ package storage
 
 import (
 	"context"
-	"local/config"
-	"local/domain"
-	// "local/internal/storage/file"
-	// "local/internal/storage/memory"
-	"local/internal/storage/postgres"
+	"github.com/MayhemI7I/URL-Shortener-Service/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
+	// "github.com/MayhemI7I/URL-Shortener-Service/internal/storage/file"
+	// "github.com/MayhemI7I/URL-Shortener-Service/internal/storage/memory"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage/postgres"
 	"time"
 
 

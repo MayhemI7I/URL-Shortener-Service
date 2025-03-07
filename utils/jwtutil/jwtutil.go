@@ -7,21 +7,23 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 
-	"local/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
 )
 
 // GenerateAccessToken creates a new JWT access token
 func GenerateAccessToken(userID, secretKey string) (string, error) {
 	claims := &domain.Claims{
 		UserID: userID,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(15 * time.Minute).Unix(),
-			IssuedAt:  time.Now().Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(15 * time.Minute)),
+			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secretKey))
 }
+
 
 // ParseJWT parses and validates a JWT token, returning the claims
 func ParseJWT(tokenString string) (*domain.Claims, error) {

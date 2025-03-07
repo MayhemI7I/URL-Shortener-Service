@@ -9,10 +9,10 @@ import (
 
 	"go.uber.org/zap"
 
-	"local/domain"
-	"local/utils/jwtutil"
-	"local/logger"
-	"local/utils/token"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/token"
 )
 
 const (

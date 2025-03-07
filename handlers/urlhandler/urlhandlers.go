@@ -12,9 +12,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"local/domain"
-	"local/internal/storage"
-	"local/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 )
 
 
@@ -73,20 +73,34 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 
 func(h *URLHandler)HandleGetUserAllURLs(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
-	defer cancel()
+defer cancel()
 
-	userID, err := extractUserID(r)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
-		return
-	}
-	responseURLs, err := h.storage.GetUserAllURLs(ctx, userID)
-	if err != nil{
-		logger.Log.Error("failed to get user URLs", zap.Error(err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	json.NewEncoder(w).Encode(responseURLs)
+userID, err := extractUserID(r)
+if err != nil {
+	http.Error(w, err.Error(), http.StatusUnauthorized)
+	return
+}
+
+responseURLs, err := h.storage.GetUserAllURLs(ctx, userID)
+if err != nil {
+	logger.Log.Error("failed to get user URLs", zap.Error(err))
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+	return
+}
+if len(responseURLs) == 0 {
+	w.WriteHeader(http.StatusNoContent)
+		return 
 	
+}
+
+w.Header().Set("Content-Type", "application/json")
+w.WriteHeader(http.StatusOK)
+if err = json.NewEncoder(w).Encode(responseURLs); err != nil {
+	logger.Log.Error("failed to encode response", zap.Error(err))
+	return
+}
+logger.Log.Info("successfully retrieved user URLs", zap.String("userID", userID), zap.Int("count", len(responseURLs)))
+
 
 
 }

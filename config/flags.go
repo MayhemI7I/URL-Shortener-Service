@@ -1,7 +1,7 @@
 package config
 
 import (
-	"local/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 	"os"
 
 	"github.com/spf13/pflag"
@@ -25,12 +25,12 @@ func InitConfig() *Config {
 	cfg := &Config{}
 
 	// Define command-line flags
-	pflag.StringVarP(&cfg.ServerAdress, "server-address", "s", "localhost", "Server address")
+	pflag.StringVarP(&cfg.ServerAdress, "server-address", "s", "github.com/MayhemI7I/URL-Shortener-Servicehost", "Server address")
 	pflag.StringVarP(&cfg.ServerPort, "server-port", "p", "8080", "Server port")
-	pflag.StringVarP(&cfg.BaseURL, "base-url", "b", "http://localhost:8080", "Base URL for return server")
+	pflag.StringVarP(&cfg.BaseURL, "base-url", "b", "http://github.com/MayhemI7I/URL-Shortener-Servicehost:8080", "Base URL for return server")
 	pflag.StringVar(&cfg.LogLevel, "log-level", "debug", "Log level")
 	pflag.StringVarP(&cfg.FileStorage, "file-storage", "f", "short-url-db.json", "Path to file storage")
-	pflag.StringVarP(&cfg.DataBaseDSN, "database-dsn", "d", "postgres://postgres:1@localhost:5432/usvideos", "PostgreSQL DSN")
+	pflag.StringVarP(&cfg.DataBaseDSN, "database-dsn", "d", "postgres://postgres:1@github.com/MayhemI7I/URL-Shortener-Servicehost:5432/usvideos", "PostgreSQL DSN")
 	pflag.Uint16VarP(&cfg.URLLength, "url-length", "l", 8, "URL length")
 	pflag.StringVarP(&cfg.JWTSecretKey, "jwt-secret", "j", "secret", "JWT secret")
 	// Override configuration with environment variables if they are set

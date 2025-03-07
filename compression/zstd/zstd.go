@@ -2,7 +2,7 @@ package zstd
 
 import (
 	"io"
-	"local/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 	"net/http"
 	"strings"
 

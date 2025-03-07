@@ -7,9 +7,9 @@ import (
    "os"
    "errors"
 
-	"local/domain"
-	"local/utils/jwtutil"
-	"local/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
    
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
@@ -107,7 +107,8 @@ func (pg *PostgresStorage) GetUserAllURLs(ctx context.Context, userID string) ([
 	err := pg.db.SelectContext(ctx, &urls, query, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil // Пустой список, а не ошибка
+			logger.Log.Debug("no URLs found for user", zap.String("user_id", userID), zap.Error(err))
+			return nil, nil
 		}
 		logger.Log.Error("failed to get user URLs", zap.String("user_id", userID), zap.Error(err))
 		return nil, err

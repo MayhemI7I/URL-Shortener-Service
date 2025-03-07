@@ -1,19 +1,19 @@
 package main
 
 import (
-	"local/compression/zstd"
-	"local/config"
-	"local/handlers/loghandler"
-	"local/handlers/urlhandler"
-	"local/internal/storage"
-	"local/logger"
-	"local/utils"
+	"github.com/MayhemI7I/URL-Shortener-Service/compression/zstd"
+	"github.com/MayhemI7I/URL-Shortener-Service/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/handlers/middleware"
+	"github.com/MayhemI7I/URL-Shortener-Service/handlers/urlhandler"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils"
 	"net/http"
 	"time"
 )
 
 // initApp выполняет все необходимые иниты и возвращает готовые зависимости.
-func initApp() (*config.Config, *urlhandler.URLHandler, error) {
+func initApp() (*config.Config, *urlhandler.URLHandler, storage.Storage, error) {
 	// Загружаем конфиг
 	cfg := config.InitConfig()
 
@@ -23,7 +23,7 @@ func initApp() (*config.Config, *urlhandler.URLHandler, error) {
 	// Инициализируем хранилище
 	store, err := storage.NewStorage(*cfg)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	// Создаем генератор коротких URL
@@ -32,41 +32,46 @@ func initApp() (*config.Config, *urlhandler.URLHandler, error) {
 	// Создаем обработчик URL
 	urlHandler := urlhandler.NewURLHandler(store, genUrl)
 
-	return cfg, urlHandler, nil
+	return cfg, urlHandler,store, nil
 }
 
 func main() {
-	cfg, urlHandler, err := initApp()
-	if err != nil {
-		logger.Log.Fatalf("failed to initialize application: %v", err)
-	}
-	defer logger.CloseLogger()
+	cfg, urlHandler,store, err := initApp()
+    if err != nil {
+        logger.Log.Fatalf("failed to initialize application: %v", err)
+    }
+    defer logger.CloseLogger()
 
-	// Создаем HTTP multiplexer и регистрируем хендлеры
-	mux := http.NewServeMux()
-	compressedHandler := loghandler.WithLog(
-		zstd.Decompression(
-			zstd.Compression(
-				http.HandlerFunc(urlHandler.HandURL),
-			),
-		),
-	)
-	mux.Handle("/", compressedHandler)
+    // Создаем HTTP multiplexer
+    mux := http.NewServeMux()
 
-	mux.Handle("/api/shorten", loghandler.WithLog(
-		zstd.Decompression(
-			zstd.Compression(
-				http.HandlerFunc(urlHandler.HandlePost),
-			),
-		),
-	))
-	mux.Handle("/apu/users/urls", urlhandler.HandleGetUserURLs)
+    // Унифицированный конвейер для всех маршрутов
+    mux.Handle("/", middleware.Conveyor(
+        http.HandlerFunc(urlHandler.HandURL),
+        middleware.WithLog,
+        zstd.Decompression,
+        zstd.Compression,
+    ))
 
-	// Запускаем сервер
-	if err := runServer(cfg, mux); err != nil {
-		logger.Log.Fatalf("failed to start server: %v", err)
-	}
+    mux.Handle("/api/shorten", middleware.Conveyor(
+        http.HandlerFunc(urlHandler.HandlePost),
+        middleware.WithLog,
+        zstd.Decompression,
+        zstd.Compression,
+    ))
+
+    mux.Handle("/api/users/urls", middleware.Conveyor(
+        http.HandlerFunc(urlHandler.HandleGetUserAllURLs),
+        middleware.WithLog,
+        middleware.Auth(store),
+    ))
+
+    // Запускаем сервер
+    if err := runServer(cfg, mux); err != nil {
+        logger.Log.Fatalf("failed to start server: %v", err)
+    }
 }
+
 
 // runServer запускает HTTP-сервер
 func runServer(cfg *config.Config, mux *http.ServeMux) error {

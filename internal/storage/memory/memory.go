@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"local/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
 )
 
 // Storage represents an in-memory storage for URL pairs and refresh tokens.

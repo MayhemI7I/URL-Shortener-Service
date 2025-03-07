@@ -35,5 +35,5 @@ type RefreshToken struct {
 
 type Claims struct {
 	UserID string `json:"user_id"` // The ID (UUID) of the user associated with the token
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }

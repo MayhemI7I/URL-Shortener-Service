@@ -4,7 +4,7 @@ import (
    "crypto/sha256"
    "encoding/base64"
    "errors"
-   "local/logger"
+   "github.com/MayhemI7I/URL-Shortener-Service/logger"
 )
 
 type GeneratorShortURL struct {

@@ -1,9 +1,9 @@
-package loghandler
+package middleware
 
 import (
 	"time"
 	"net/http"
-	"local/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 )
 
 func WithLog(next http.Handler) http.Handler {

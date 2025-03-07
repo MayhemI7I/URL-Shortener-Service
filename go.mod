@@ -1,4 +1,4 @@
-module local
+module github.com/MayhemI7I/URL-Shortener-Service
 
 go 1.24
 
