@@ -56,3 +56,59 @@
 {"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T14:15:44.175+0300","M":"Starting client"}
 {"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-02-27T14:15:49.979+0300","M":"Server returned error: 400 Bad Request, URL is required"}
 {"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-02-27T14:23:55.113+0300","M":"Starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T13:47:57.648+0300","M":"starting client"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.692+0300","M":"login failed with status{status 11 401  <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.693+0300","M":"post JSON returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.693+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.694+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.700+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.701+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:48:30.702+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:10:49.810+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:11:08.115+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:11:08.117+0300","M":"post JSON returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:11:08.118+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:11:08.118+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:11:08.119+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:11:08.120+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:11:08.120+0300","M":"get all URLs failed with status{status 11 401  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:35:09.220+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:35:25.959+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:35:25.971+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:35:25.971+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:35:25.972+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:35:25.973+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:35:25.975+0300","M":"get all URLs failed with status{status 11 401  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:37:54.162+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:38:03.685+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:38:03.691+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:38:03.692+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:38:03.694+0300","M":"get all URLs failed with status{status 11 500  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:45.093+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:52.661+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.665+0300","M":"post JSON returned error{status 11 500  <nil>} {body 15 0 Internal server error <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.667+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.667+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.669+0300","M":"get all URLs failed with status{status 11 500  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:19.485+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:27.573+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.576+0300","M":"post JSON returned error{status 11 500  <nil>} {body 15 0 Internal server error <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.577+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.577+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.580+0300","M":"get all URLs failed with status{status 11 204  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:11.761+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:16.629+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:25:16.639+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:25:16.639+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:34:50.213+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:35:01.105+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:35:01.155+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:35:01.156+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:35:01.157+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:43:53.245+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:44:01.283+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:44:01.286+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:45:23.718+0300","M":"starting client"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:45:31.379+0300","M":"login successful"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:45:31.383+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:45:31.384+0300","M":"post FormData returned error{status 11 401  <nil>} {body 15 0 unauthorized: missing or invalid user ID <nil>}"}

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"go.uber.org/zap"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/httputil"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/domain"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage"
@@ -61,7 +62,7 @@ func (h *URLHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 
 	origURL, err := h.storage.Get(ctx, shortURL, userID)
 	if err != nil {
-		respondWithError(w, err)
+		httputil.RespondWithError(w, err)
 		return
 	}
 
@@ -120,13 +121,13 @@ func (h *URLHandler) HandlePost(w http.ResponseWriter, r *http.Request) {
 
 	urls, contentType, err := parseRequestBody(r, userID)
 	if err != nil {
-		respondWithError(w, err)
+		httputil.RespondWithError(w, err)
 		return
 	}
 
-	responseURLs, err := h.processURLs(ctx, urls, userID)
+	responseURLs, err := h.ProcessURLs(ctx, urls, userID)
 	if err != nil {
-		respondWithError(w, err)
+		httputil.RespondWithError(w, err)
 		return
 	}
 
@@ -149,6 +150,10 @@ func (h *URLHandler) HandURL(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
+
+
+
+
 
 // Helper functions
 
@@ -177,14 +182,16 @@ func parseRequestBody(r *http.Request, userID string) ([]domain.URLData, string,
 		if origURL == "" {
 			return nil, "", errors.New("URL is required")
 		}
-		urls = []domain.URLData{{URLPair: domain.URLPair{OrigURL: origURL}, UserID: userID}}
+		urls = []domain.URLData{{User: domain.User{ID: userID}, URLPair: domain.URLPair{OrigURL: origURL}},
+
+}
 
 	case "application/json":
 		if err := json.NewDecoder(r.Body).Decode(&urls); err != nil {
 			return nil, "", fmt.Errorf("error decoding JSON: %v", err)
 		}
 		for i := range urls {
-			urls[i].UserID = userID
+			urls[i].User.ID = userID
 		}
 
 	default:
@@ -193,18 +200,18 @@ func parseRequestBody(r *http.Request, userID string) ([]domain.URLData, string,
 	return urls, contentType, nil
 }
 
-// processURLs generates or retrieves short URLs for the given list
-func (h *URLHandler) processURLs(ctx context.Context, urls []domain.URLData, userID string) ([]domain.URLData, error) {
+// ProcessURLs generates or retrieves short URLs for the given list
+func (h *URLHandler) ProcessURLs(ctx context.Context, urls []domain.URLData, userID string) ([]domain.URLData, error) {
 	var responseURLs []domain.URLData
 	for _, url := range urls {
-		shortURL, err := h.storage.FindByLongURL(ctx, url.OrigURL, userID)
+		shortURL, err := h.storage.FindByOriginalURL(ctx, url.OrigURL, userID)
 		if err != nil && !errors.Is(err, domain.ErrURLNotFound) {
 			logger.Log.Error("failed to check existing URL", zap.String("origURL", url.OrigURL), zap.Error(err))
 			return nil, err
 		}
 
 		if shortURL != "" {
-			responseURLs = append(responseURLs, domain.URLData{URLPair: domain.URLPair{ShortURL: shortURL, OrigURL: url.OrigURL}, UserID: userID})
+			responseURLs = append(responseURLs, domain.URLData{domain.User{ID: userID},domain.URLPair{ShortURL: shortURL, OrigURL: url.OrigURL}})
 			continue
 		}
 
@@ -221,7 +228,7 @@ func (h *URLHandler) processURLs(ctx context.Context, urls []domain.URLData, use
 			logger.Log.Error("failed to save URL", zap.String("shortURL", shortURL), zap.Error(err))
 			return nil, err
 		}
-		responseURLs = append(responseURLs, domain.URLData{URLPair: domain.URLPair{ShortURL: shortURL, OrigURL: url.OrigURL}, UserID: userID})
+		responseURLs = append(responseURLs, domain.URLData{domain.User{ID: userID},domain.URLPair{ShortURL: shortURL, OrigURL: url.OrigURL}})
 	}
 	return responseURLs, nil
 }
@@ -233,21 +240,3 @@ func closeBody(r *http.Request) {
 	}
 }
 
-// respondWithError sends an appropriate HTTP error response based on the error type
-func respondWithError(w http.ResponseWriter, err error) {
-	switch {
-	case errors.Is(err, domain.ErrURLNotFound):
-		http.Error(w, "URL not found", http.StatusNotFound)
-	case errors.Is(err, domain.ErrURLExists):
-		http.Error(w, "URL already exists", http.StatusConflict)
-	case errors.Is(err, domain.ErrTokenNotFound):
-		http.Error(w, "Unauthorized: refresh token not found", http.StatusUnauthorized)
-	case errors.Is(err, domain.ErrTokenExpired):
-		http.Error(w, "Unauthorized: refresh token expired", http.StatusUnauthorized)
-	case errors.Is(err, context.DeadlineExceeded):
-		http.Error(w, "Request timeout", http.StatusRequestTimeout)
-	default:
-		logger.Log.Error("internal error", zap.Error(err))
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
-}

@@ -3,15 +3,16 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"os"
 	"time"
-   "os"
-   "errors"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/domain"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
 	"github.com/MayhemI7I/URL-Shortener-Service/logger"
-   
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
+
 	"github.com/jmoiron/sqlx"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.uber.org/zap"
 )
 
@@ -40,13 +41,13 @@ func NewPostgresStorage(dsn string) (*PostgresStorage, error) {
 			id SERIAL PRIMARY KEY,
 			user_id UUID NOT NULL,
 			short_url VARCHAR(255) UNIQUE NOT NULL,
-			long_url VARCHAR(255) NOT NULL,
+			original_url VARCHAR(255) NOT NULL,
 			created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE TABLE IF NOT EXISTS refresh_tokens (
 			id SERIAL PRIMARY KEY,
-			refresh_token VARCHAR(255) UNIQUE NOT NULL,
 			user_id UUID NOT NULL,
+			refresh_token VARCHAR(255) UNIQUE NOT NULL,
 			expires_at TIMESTAMP NOT NULL
 		)`,
 	}
@@ -86,24 +87,24 @@ func (pg *PostgresStorage) Close() error {
 
 // Get возвращает длинный URL по короткому
 func (pg *PostgresStorage) Get(ctx context.Context, shortURL string, userID string) (string, error) {
-	var longURL string
-	query := `SELECT long_url FROM short_urls WHERE short_url = $1 AND user_id = $2`
-	err := pg.db.GetContext(ctx, &longURL, query, shortURL, userID)
+	var origURL string
+	query := `SELECT original_url FROM short_urls WHERE short_url = $1 AND user_id = $2`
+	err := pg.db.GetContext(ctx, &origURL, query, shortURL, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			logger.Log.Debug("short URL not found", zap.String("short_url", shortURL), zap.String("user_id", userID))
 			return "", domain.ErrURLNotFound
 		}
-		logger.Log.Error("failed to get long URL", zap.Error(err))
+		logger.Log.Error("failed to get original URL", zap.Error(err))
 		return "", err
 	}
-	return longURL, nil
+	return origURL, nil
 }
 
 // GetUserURLs возвращает все URL пользователя
 func (pg *PostgresStorage) GetUserAllURLs(ctx context.Context, userID string) ([]domain.URLData, error) {
 	var urls []domain.URLData
-	query := `SELECT short_url, long_url FROM short_urls WHERE user_id = $1`
+	query := `SELECT user_id,short_url, original_url, created_at FROM short_urls WHERE user_id = $1`
 	err := pg.db.SelectContext(ctx, &urls, query, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -120,10 +121,10 @@ func (pg *PostgresStorage) GetUserAllURLs(ctx context.Context, userID string) ([
 // Save сохраняет короткий URL
 func (pg *PostgresStorage) Save(ctx context.Context, shortURL, origURL, userID string) error {
 	query := `
-		INSERT INTO short_urls (short_url, long_url, user_id) 
+		INSERT INTO short_urls (short_url, original_url, user_id) 
 		VALUES ($1, $2, $3) 
 		ON CONFLICT (short_url) 
-		DO UPDATE SET long_url = EXCLUDED.long_url 
+		DO UPDATE SET original_url = EXCLUDED.original_url 
 		WHERE short_urls.user_id = $3
 	`
 	result, err := pg.db.ExecContext(ctx, query, shortURL, origURL, userID)
@@ -139,16 +140,16 @@ func (pg *PostgresStorage) Save(ctx context.Context, shortURL, origURL, userID s
 	return nil
 }
 
-// FindByLongURL ищет короткий URL по длинному
-func (pg *PostgresStorage) FindByLongURL(ctx context.Context, longURL, userID string) (string, error) {
+// FindByOriginalURL ищет короткий URL по длинному
+func (pg *PostgresStorage) FindByOriginalURL(ctx context.Context, origURL, userID string) (string, error) {
 	var shortURL string
-	query := `SELECT short_url FROM short_urls WHERE long_url = $1 AND user_id = $2`
-	err := pg.db.GetContext(ctx, &shortURL, query, longURL, userID)
+	query := `SELECT short_url FROM short_urls WHERE original_url = $1 AND user_id = $2`
+	err := pg.db.GetContext(ctx, &shortURL, query, origURL, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return "", domain.ErrURLNotFound
 		}
-		logger.Log.Error("failed to find short URL by long URL", zap.String("long_url", longURL), zap.String("user_id", userID), zap.Error(err))
+		logger.Log.Error("failed to find short URL by original URL", zap.String("original_url", origURL), zap.String("user_id", userID), zap.Error(err))
 		return "", err
 	}
 	return shortURL, nil
@@ -169,37 +170,50 @@ func (pg *PostgresStorage) GetUserIDByRefreshToken(ctx context.Context, refreshT
 	return userID, nil
 }
 
-// GetNewAccessToken генерирует новый access-токен
+
+// GetNewAccessToken retrieves a new access token and refresh token for the given refresh token.
+// If the refresh token is expired, it generates a new refresh token and saves it to the database.
 func (pg *PostgresStorage) GetNewAccessToken(ctx context.Context, refreshToken string) (string, string, error) {
-	var (
-		userID    string
-		expiresAt time.Time
-	)
-	query := `SELECT user_id, expires_at FROM refresh_tokens WHERE refresh_token = $1`
-	err := pg.db.GetContext(ctx, &struct {
-		UserID    string    `db:"user_id"`
-		ExpiresAt time.Time `db:"expires_at"`
-	}{UserID: userID, ExpiresAt: expiresAt}, query, refreshToken)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return "", "", domain.ErrTokenNotFound
-		}
-		return "", "", err
-	}
+   var (
+       userID    string
+       expiresAt time.Time
+   )
+   query := `SELECT user_id, expires_at FROM refresh_tokens WHERE refresh_token = $1`
+   // Используем указатели, чтобы данные записывались в переменные
+   err := pg.db.QueryRowContext(ctx, query, refreshToken).Scan(&userID, &expiresAt)
+   if err != nil {
+       if err == sql.ErrNoRows {
+           return "", "", domain.ErrTokenNotFound
+       }
+       logger.Log.Error("ошибка при запросе refresh-токена из базы", zap.Error(err))
+       return "", "", err
+   }
+   newRefreshToken := refreshToken
 
-	if time.Now().After(expiresAt) {
-		return "", "", domain.ErrTokenExpired
-	}
+   if time.Now().After(expiresAt) {
+   	logger.Log.Debug("refresh token expired", zap.String("refresh_token", refreshToken))
+   	newRefreshToken, err = jwtutil.GenerateRefreshToken()
+   	if err != nil {
+   		return "", "", err
+   	}
+   	newExpiresAt := time.Now().Add(jwtutil.RefreshTokenExpiration)
+   	err = pg.SaveRefreshToken(ctx, newRefreshToken, userID , newExpiresAt)
+   	if err != nil {
+   		logger.Log.Error(err)
+   		return "", "", err
+   	}
+   	
+   }
+   secretKey := os.Getenv("JWT_SECRET")
 
-	accessToken, err := jwtutil.GenerateAccessToken(userID, "secret") // Здесь используется jwtutil
-	if err != nil {
-		return "", "", err
-	}
+   accessToken, err := jwtutil.GenerateAccessToken(userID, secretKey) 
+   if err != nil {
+   	return "", "", err
+   }
 
-	// Здесь можно сгенерировать новый refresh-токен, если требуется
-	newRefreshToken := refreshToken // Пока используем старый
-	return accessToken, newRefreshToken, nil
+   return accessToken, newRefreshToken, nil
 }
+
 
 // SaveRefreshToken сохраняет refresh-токен
 func (pg *PostgresStorage) SaveRefreshToken(ctx context.Context, refreshToken, userID string, expiresAt time.Time) error {
@@ -233,4 +247,5 @@ func (pg *PostgresStorage) DeleteRefreshToken(ctx context.Context, refreshToken 
 	logger.Log.Debug("refresh token deleted", zap.String("refresh_token", refreshToken))
 	return nil
 }
+
 

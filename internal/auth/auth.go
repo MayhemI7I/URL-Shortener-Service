@@ -18,8 +18,6 @@ import (
 
 
 
-// Helper functions
-
 func IsTokenExpired(err error) bool {
 	if ve, ok := err.(*jwt.ValidationError); ok {
 		return ve.Errors&jwt.ValidationErrorExpired != 0
@@ -27,24 +25,33 @@ func IsTokenExpired(err error) bool {
 	return false
 }
 
-func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s storage.Storage) error {
-	refreshToken, err := httputil.ExtractCookie(r, httputil.RefreshTokenCookie)
-	if err != nil {
-		logger.Log.Debug("missing or invalid refresh token", zap.Error(err))
-		return fmt.Errorf("unauthorized: %v", err)
-	}
+// HandleTokenRefresh handles the token refresh process.
+// It extracts the refresh token from the request, gets a new access token from the storage,
+// and sets the new access token and refresh token as cookies in the response.
+func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s storage.Storage) (string,error) {
+   // Extract the refresh token from the request.
+   refreshToken, err := httputil.ExtractCookie(r, httputil.RefreshTokenCookie)
+   if err != nil {
+   	// Log the error and return an unauthorized error.
+   	logger.Log.Debug("missing or invalid refresh token", zap.Error(err))
+   	return "",fmt.Errorf("unauthorized: %v", err)
+   }
 
-	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
-	defer cancel()
+   // Create a context with a timeout of 5 seconds.
+   ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+   defer cancel()
 
-	newAccessToken, newRefreshToken, err := s.GetNewAccessToken(ctx, refreshToken)
-	if err != nil {
-		return err
-	}
+   // Get a new access token from the storage.
+   newAccessToken, refreshToken, err := s.GetNewAccessToken(ctx, refreshToken)
+   if err != nil {
+   	// Return the error if there was a problem getting the new access token.
+   	return "", err
+   }
 
-	httputil.SetCookie(w, httputil.AccessTokenCookie, newAccessToken, httputil.AccessTokenExpiry)
-	httputil.SetCookie(w, httputil.RefreshTokenCookie, newRefreshToken, httputil.RefreshTokenExpiry)
-	return nil
+   // Set the new access token and refresh token as cookies in the response.
+   httputil.SetCookie(w, httputil.AccessTokenCookie, newAccessToken, httputil.AccessTokenExpiry)
+   httputil.SetCookie(w, httputil.RefreshTokenCookie, refreshToken, httputil.RefreshTokenExpiry)
+   return newAccessToken, nil
 }
 
 func SetCSRFToken(w http.ResponseWriter, userID string) (string, error) {

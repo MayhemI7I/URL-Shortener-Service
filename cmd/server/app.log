@@ -227,3 +227,164 @@
 {"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.228+0300","M":"Generated short URL: 4txi_2vM"}
 {"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.228+0300","M":"short url saved{shortURL 15 0 4txi_2vM <nil>}"}
 {"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-02-27T14:24:09.228+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:26:32.411+0300","M":"failed to open database{error 26 0  sql: unknown driver \"pgx\" (forgotten import?)}"}
+{"L":"\u001b[31mFATAL\u001b[0m","timestamp":"2025-03-11T13:26:32.427+0300","M":"failed to initialize application: sql: unknown driver \"pgx\" (forgotten import?)"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T13:35:00.417+0300","M":"failed to create index{error 26 0  ОШИБКА: столбец \"user_id\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[31mFATAL\u001b[0m","timestamp":"2025-03-11T13:35:00.432+0300","M":"failed to initialize application: ОШИБКА: столбец \"user_id\" не существует (SQLSTATE 42703)"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T13:47:12.047+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T13:47:12.062+0300","M":"2025-03-11 13:47:12Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.690+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.692+0300","M":"request","uri":"/api/login","method":"POST","duration":"502.6µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.692+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.693+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.694+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.700+0300","M":"request","uri":"/","method":"POST","duration":"17.6µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.701+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T13:48:30.702+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T13:52:26.092+0300","M":"Shutting down server"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T13:52:26.092+0300","M":"Server stopped"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:10:43.701+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:10:43.716+0300","M":"2025-03-11 14:10:43Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.114+0300","M":"refresh token saved{refresh_token 15 0 728f00c0c2b8ff5a60b00174b5c5c9b4 <nil>} {user_id 15 0 82025244-5f94-4a30-b732-871d9724bb2b <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:11:08.114+0300","M":"successfully registered user{userID 15 0 82025244-5f94-4a30-b732-871d9724bb2b <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.114+0300","M":"request","uri":"/api/login","method":"POST","duration":"15.99ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.116+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.117+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.117+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.118+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.119+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.119+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:11:08.120+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"0s"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:34:35.067+0300","M":"Shutting down server"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:34:35.068+0300","M":"Server stopped"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:34:39.147+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:34:39.162+0300","M":"2025-03-11 14:34:39Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.958+0300","M":"refresh token saved{refresh_token 15 0 779d45f5eccb6ce6ad2f5e89306ba108 <nil>} {user_id 15 0 24d813f1-d731-435d-afc2-366af74d795b <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:35:25.958+0300","M":"successfully registered user{userID 15 0 24d813f1-d731-435d-afc2-366af74d795b <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.958+0300","M":"request","uri":"/api/login","method":"POST","duration":"5.1243ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.960+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.964+0300","M":"Generated short URL: uGaEW2um"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.966+0300","M":"short URL saved{short_url 15 0 uGaEW2um <nil>} {user_id 15 0 24d813f1-d731-435d-afc2-366af74d795b <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.966+0300","M":"Generated short URL: uTHwrXvS"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.967+0300","M":"short URL saved{short_url 15 0 uTHwrXvS <nil>} {user_id 15 0 24d813f1-d731-435d-afc2-366af74d795b <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.967+0300","M":"Generated short URL: 2ylITnsw"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.968+0300","M":"short URL saved{short_url 15 0 2ylITnsw <nil>} {user_id 15 0 24d813f1-d731-435d-afc2-366af74d795b <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.968+0300","M":"Generated short URL: ET5Kxt1q"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.969+0300","M":"short URL saved{short_url 15 0 ET5Kxt1q <nil>} {user_id 15 0 24d813f1-d731-435d-afc2-366af74d795b <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.969+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"8.8265ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.970+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.971+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.972+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.972+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:35:25.974+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"0s"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:37:43.275+0300","M":"Shutting down server"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:37:43.275+0300","M":"Server stopped"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:37:46.062+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:37:46.077+0300","M":"2025-03-11 14:37:46Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.683+0300","M":"refresh token saved{refresh_token 15 0 53f695ea48cf9f6b833438f7206d8e69 <nil>} {user_id 15 0 02f8dd50-a0ff-4e57-8cf5-d8025c78b518 <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T14:38:03.683+0300","M":"successfully registered user{userID 15 0 02f8dd50-a0ff-4e57-8cf5-d8025c78b518 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.684+0300","M":"request","uri":"/api/login","method":"POST","duration":"2.8787ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.685+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.688+0300","M":"Generated short URL: 6GT3vV9a"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.689+0300","M":"short URL saved{short_url 15 0 6GT3vV9a <nil>} {user_id 15 0 02f8dd50-a0ff-4e57-8cf5-d8025c78b518 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.689+0300","M":"Generated short URL: XrSIsXw5"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.690+0300","M":"short URL saved{short_url 15 0 XrSIsXw5 <nil>} {user_id 15 0 02f8dd50-a0ff-4e57-8cf5-d8025c78b518 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.690+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"4.4447ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.691+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.692+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:38:03.693+0300","M":"failed to get user URLs{user_id 15 0 02f8dd50-a0ff-4e57-8cf5-d8025c78b518 <nil>} {error 26 0  missing destination name short_url in *[]domain.URLData}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T14:38:03.694+0300","M":"failed to get user URLs{error 26 0  missing destination name short_url in *[]domain.URLData}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T14:38:03.694+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"1.071ms"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:33.786+0300","M":"Shutting down server"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:33.786+0300","M":"Server stopped"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:38.535+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:38.551+0300","M":"2025-03-11 15:19:38Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.659+0300","M":"refresh token saved{refresh_token 15 0 42314a3a88dd1f80dd72ad2eaab70f7b <nil>} {user_id 15 0 8a795a38-3ec2-4ee1-9ffa-20dacb2c7cd1 <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:19:52.659+0300","M":"successfully registered user{userID 15 0 8a795a38-3ec2-4ee1-9ffa-20dacb2c7cd1 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.660+0300","M":"request","uri":"/api/login","method":"POST","duration":"3.7095ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.661+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.664+0300","M":"failed to find short URL by long URL{long_url 15 0 11111111111adsvvdfbv <nil>} {user_id 15 0 8a795a38-3ec2-4ee1-9ffa-20dacb2c7cd1 <nil>} {error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.664+0300","M":"failed to check existing URL{origURL 15 0 11111111111adsvvdfbv <nil>} {error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.665+0300","M":"internal error{error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.665+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"3.0587ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.666+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.667+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.668+0300","M":"failed to get user URLs{user_id 15 0 8a795a38-3ec2-4ee1-9ffa-20dacb2c7cd1 <nil>} {error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:19:52.668+0300","M":"failed to get user URLs{error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:19:52.668+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"514.7µs"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:13.770+0300","M":"Shutting down server"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:13.770+0300","M":"Server stopped"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:16.238+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:16.253+0300","M":"2025-03-11 15:21:16Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.571+0300","M":"refresh token saved{refresh_token 15 0 39b146e06496c10d0bc73b8412ecf301 <nil>} {user_id 15 0 31fab48a-d402-4744-b7cd-d67e85e3f2bd <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:21:27.571+0300","M":"successfully registered user{userID 15 0 31fab48a-d402-4744-b7cd-d67e85e3f2bd <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.572+0300","M":"request","uri":"/api/login","method":"POST","duration":"4.1529ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.573+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.575+0300","M":"failed to find short URL by long URL{long_url 15 0 222222222adbfss <nil>} {user_id 15 0 31fab48a-d402-4744-b7cd-d67e85e3f2bd <nil>} {error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.575+0300","M":"failed to check existing URL{origURL 15 0 222222222adbfss <nil>} {error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[31mERROR\u001b[0m","timestamp":"2025-03-11T15:21:27.575+0300","M":"internal error{error 26 0  ОШИБКА: столбец \"long_url\" не существует (SQLSTATE 42703)}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.576+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"1.5401ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.577+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.577+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.580+0300","M":"retrieved URLs for user{user_id 15 0 31fab48a-d402-4744-b7cd-d67e85e3f2bd <nil>} {count 11 0  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:21:27.580+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"2.1263ms"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:03.770+0300","M":"Shutting down server"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:03.770+0300","M":"Server stopped"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:06.187+0300","M":"database, tables, and indexes initialized successfully"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:06.202+0300","M":"2025-03-11 15:25:06Server started on localhost:8080"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.628+0300","M":"refresh token saved{refresh_token 15 0 3a83f114eb4c9031deae06533f3d63ae <nil>} {user_id 15 0 8bfa3690-268c-4d47-abf5-0cc32abb09cc <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:16.628+0300","M":"successfully registered user{userID 15 0 8bfa3690-268c-4d47-abf5-0cc32abb09cc <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.628+0300","M":"request","uri":"/api/login","method":"POST","duration":"4.7012ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.630+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.634+0300","M":"Generated short URL: IIK5My7O"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.635+0300","M":"short URL saved{short_url 15 0 IIK5My7O <nil>} {user_id 15 0 8bfa3690-268c-4d47-abf5-0cc32abb09cc <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.636+0300","M":"Generated short URL: NfZDAjB6"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.636+0300","M":"short URL saved{short_url 15 0 NfZDAjB6 <nil>} {user_id 15 0 8bfa3690-268c-4d47-abf5-0cc32abb09cc <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.636+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"5.3404ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.638+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.639+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.641+0300","M":"retrieved URLs for user{user_id 15 0 8bfa3690-268c-4d47-abf5-0cc32abb09cc <nil>} {count 11 2  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:25:16.641+0300","M":"successfully retrieved user URLs{userID 15 0 8bfa3690-268c-4d47-abf5-0cc32abb09cc <nil>} {count 11 2  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:25:16.642+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"1.5617ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.103+0300","M":"refresh token saved{refresh_token 15 0 b86f14fe4026e26df375626a877cd080 <nil>} {user_id 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:35:01.103+0300","M":"successfully registered user{userID 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.104+0300","M":"request","uri":"/api/login","method":"POST","duration":"32.361ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.105+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.107+0300","M":"Generated short URL: p_Q_gAfO"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.143+0300","M":"short URL saved{short_url 15 0 p_Q_gAfO <nil>} {user_id 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.144+0300","M":"Generated short URL: QVlaVyUQ"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.152+0300","M":"short URL saved{short_url 15 0 QVlaVyUQ <nil>} {user_id 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.153+0300","M":"Generated short URL: dn1n73yB"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.154+0300","M":"short URL saved{short_url 15 0 dn1n73yB <nil>} {user_id 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.154+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"47.2231ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.155+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.156+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.157+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.158+0300","M":"retrieved URLs for user{user_id 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>} {count 11 3  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:35:01.158+0300","M":"successfully retrieved user URLs{userID 15 0 a4c9ccf1-1e47-4dfd-b886-b8164327b305 <nil>} {count 11 3  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:35:01.158+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"561.2µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.281+0300","M":"refresh token saved{refresh_token 15 0 6034f848549ff80e60b288f73c1a3386 <nil>} {user_id 15 0 c1c96245-2c54-4edf-87ed-dddc8aa37e2a <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:44:01.281+0300","M":"successfully registered user{userID 15 0 c1c96245-2c54-4edf-87ed-dddc8aa37e2a <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.282+0300","M":"request","uri":"/api/login","method":"POST","duration":"2.5606ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.283+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.284+0300","M":"Generated short URL: zSP6F0J1"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.285+0300","M":"short URL saved{short_url 15 0 zSP6F0J1 <nil>} {user_id 15 0 c1c96245-2c54-4edf-87ed-dddc8aa37e2a <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.285+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"1.2707ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.286+0300","M":"request","uri":"/","method":"POST","duration":"17µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.287+0300","M":"retrieved URLs for user{user_id 15 0 c1c96245-2c54-4edf-87ed-dddc8aa37e2a <nil>} {count 11 1  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:44:01.287+0300","M":"successfully retrieved user URLs{userID 15 0 c1c96245-2c54-4edf-87ed-dddc8aa37e2a <nil>} {count 11 1  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:44:01.287+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"599µs"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.378+0300","M":"refresh token saved{refresh_token 15 0 d480b74fc9d4c0855b524f3701980b0b <nil>} {user_id 15 0 827196fe-190e-4875-9187-2a149e14ab47 <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:45:31.378+0300","M":"successfully registered user{userID 15 0 827196fe-190e-4875-9187-2a149e14ab47 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.378+0300","M":"request","uri":"/api/login","method":"POST","duration":"2.6152ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.380+0300","M":"request","uri":"/Ph-VaNhL","method":"GET","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.381+0300","M":"Generated short URL: sMendmlU"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.381+0300","M":"short URL saved{short_url 15 0 sMendmlU <nil>} {user_id 15 0 827196fe-190e-4875-9187-2a149e14ab47 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.381+0300","M":"Generated short URL: oZUAMsdi"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.382+0300","M":"short URL saved{short_url 15 0 oZUAMsdi <nil>} {user_id 15 0 827196fe-190e-4875-9187-2a149e14ab47 <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.382+0300","M":"request","uri":"/api/shorten","method":"POST","duration":"1.9541ms"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.383+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.384+0300","M":"request","uri":"/","method":"POST","duration":"0s"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.385+0300","M":"retrieved URLs for user{user_id 15 0 827196fe-190e-4875-9187-2a149e14ab47 <nil>} {count 11 2  <nil>}"}
+{"L":"\u001b[34mINFO\u001b[0m","timestamp":"2025-03-11T15:45:31.385+0300","M":"successfully retrieved user URLs{userID 15 0 827196fe-190e-4875-9187-2a149e14ab47 <nil>} {count 11 2  <nil>}"}
+{"L":"\u001b[35mDEBUG\u001b[0m","timestamp":"2025-03-11T15:45:31.385+0300","M":"request","uri":"/api/user/urls","method":"GET","duration":"664.4µs"}

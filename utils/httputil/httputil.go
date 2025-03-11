@@ -12,7 +12,6 @@ import (
 	"github.com/MayhemI7I/URL-Shortener-Service/domain"
 	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
 	"github.com/MayhemI7I/URL-Shortener-Service/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/token"
 )
 
 const (
@@ -28,7 +27,7 @@ func SetJWTCookieWithNewRefresh(w http.ResponseWriter, userID, secretKey string)
 	if err != nil {
 		return err
 	}
-	refreshToken, err := token.GenerateRefreshToken(userID)
+	refreshToken, err := jwtutil.GenerateRefreshToken()
 	if err != nil {
 		return err
 	}
@@ -66,7 +65,7 @@ func SetCookie(w http.ResponseWriter, name, value string, expiry time.Duration) 
 		Value:    value,
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   true,
+		Secure:   false,
 		SameSite: http.SameSiteLaxMode, // Можно сделать Strict в зависимости от требований
 		Expires:  time.Now().Add(expiry),
 	})
