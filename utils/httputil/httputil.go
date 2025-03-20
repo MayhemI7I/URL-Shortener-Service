@@ -1,22 +1,22 @@
 package httputil
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"time"
-	"context"
 
 	"go.uber.org/zap"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/domain"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/MayhemI7I/URL-Shortener-Service/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
 )
 
 const (
 	AccessTokenCookie  = "access_token"
-	RefreshTokenCookie = "refreshToken" 
+	RefreshTokenCookie = "refreshToken"
 	AccessTokenExpiry  = 15 * time.Minute
 	RefreshTokenExpiry = 24 * time.Hour
 )
@@ -43,9 +43,9 @@ func SetJWTCookieWithOldRefresh(w http.ResponseWriter, userID, secretKey string)
 	if err != nil {
 		return err
 	}
-	
+
 	SetCookie(w, AccessTokenCookie, accessToken, AccessTokenExpiry)
-	
+
 	return nil
 }
 
@@ -74,13 +74,13 @@ func SetCookie(w http.ResponseWriter, name, value string, expiry time.Duration) 
 // RespondWithError sends an appropriate HTTP error response based on the error type
 func RespondWithError(w http.ResponseWriter, err error) {
 	switch {
-	case errors.Is(err, domain.ErrURLNotFound):
+	case errors.Is(err, models.ErrURLNotFound):
 		http.Error(w, "URL not found", http.StatusNotFound)
-	case errors.Is(err, domain.ErrURLExists):
+	case errors.Is(err, models.ErrURLExists):
 		http.Error(w, "URL already exists", http.StatusConflict)
-	case errors.Is(err, domain.ErrTokenNotFound):
+	case errors.Is(err, models.ErrTokenNotFound):
 		http.Error(w, "Unauthorized: refresh token not found", http.StatusUnauthorized)
-	case errors.Is(err, domain.ErrTokenExpired):
+	case errors.Is(err, models.ErrTokenExpired):
 		http.Error(w, "Unauthorized: refresh token expired", http.StatusUnauthorized)
 	case errors.Is(err, context.DeadlineExceeded):
 		http.Error(w, "Request timeout", http.StatusRequestTimeout)

@@ -1,4 +1,4 @@
-package domain
+package models
 
 import(
 	"errors"
@@ -12,5 +12,6 @@ var (
 	ErrTokenExpired    = errors.New("refresh token expired")
 	ErrURLNotFound = errors.New("URL not found")
 	ErrURLExists = errors.New("URL already exists")
+	ErrURLDeleted = errors.New("URL deleted")
 	
 )

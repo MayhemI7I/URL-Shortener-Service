@@ -20,10 +20,11 @@ type Storage interface {
 	GetUserAllURLs(ctx context.Context, userId string) ([]domain.URLData, error)
 	GetUserIDByRefreshToken(ctx context.Context, refreshToken string)(string,error)
 	GetNewAccessToken(ctx context.Context, refreshToken string)(string,string,error)
+	MarkURLsAsDeleted(ctx context.Context, shortURLs []string, userId string) error
 	
 	SaveRefreshToken(ctx context.Context,refreshToken, UserID string, expiresAt time.Time)error
 	DeleteRefreshToken(ctx context.Context,refreshToken string)error
-
+	
 	Close() error
 }
 

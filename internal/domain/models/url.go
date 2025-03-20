@@ -1,4 +1,4 @@
-package domain
+package models
 
 import (
 	"github.com/golang-jwt/jwt/v4"
@@ -17,7 +17,9 @@ type User struct {
 type URLPair struct {
 	ShortURL  string    `json:"short_url" db:"short_url"`    // The shortened URL
 	OrigURL   string    `json:"original_url" db:"original_url"` // The original long URL
+	DeletedFlag bool `json:"deleted_flag" db:"deleted_flag"` // Flag to check if the URL is deleted
 	CreatedAt time.Time `json:"created_at" db:"created_at"`   // Timestamp when the URL pair was created
+
 }
 
 // URLData contains data for working with URLs and their associated user.

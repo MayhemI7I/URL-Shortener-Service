@@ -42,6 +42,7 @@ func NewPostgresStorage(dsn string) (*PostgresStorage, error) {
 			user_id UUID NOT NULL,
 			short_url VARCHAR(255) UNIQUE NOT NULL,
 			original_url VARCHAR(255) NOT NULL,
+			deleted_flag BOOLEAN NOT NULL DEFAULT FALSE,
 			created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE TABLE IF NOT EXISTS refresh_tokens (

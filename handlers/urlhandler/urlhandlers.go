@@ -44,6 +44,17 @@ func NewURLHandler(storage storage.Storage, urlGenerator URLGenerator) *URLHandl
 	}
 }
 
+func(h *URLHandler)DeleteURL(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+
+	userID, err := extractUserID(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+	
+
 
 // HandleGet processes GET requests to redirect from a short URL to the original URL.
 // It retrieves the user ID from the context and uses it to fetch the original URL.
@@ -160,7 +171,7 @@ func (h *URLHandler) HandURL(w http.ResponseWriter, r *http.Request) {
 
 
 // extractUserID retrieves the user ID from the request context
-func extractUserID(r *http.Request) (string, error) {
+func ExtractUserID(r *http.Request) (string, error) {
 	userID, ok := r.Context().Value(UserIDKey).(string)
 	if !ok || userID == "" {
 		return "", errors.New("unauthorized: missing or invalid user ID")
