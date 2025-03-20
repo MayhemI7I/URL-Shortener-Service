@@ -1,79 +1,65 @@
+// auth/auth.go
 package auth
 
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"local/config"
+	"context"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"go.uber.org/zap"
+
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/utils/httputil"
+
 )
 
-func SetJWTCookie(w http.ResponseWriter, token string, secretKey *config.Config) error {
-	accessToken, err := GenerateAccessToken(token, secretKey)
-	if err != nil {
-		return err
+
+
+func IsTokenExpired(err error) bool {
+	if ve, ok := err.(*jwt.ValidationError); ok {
+		return ve.Errors&jwt.ValidationErrorExpired != 0
 	}
-	refreshToken, err := GenerateRefreshToken(token)
-	if err != nil {
-		return err
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:     "access_token",
-		Value:    accessToken,
-		Path:     "/",
-		MaxAge:   int(15 * time.Minute),
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-	})
-	http.SetCookie(w, &http.Cookie{
-		Name:     "refreshToken",
-		Value:    refreshToken,
-		Path:     "/",
-		MaxAge:   int(24 * time.Hour),
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-	})
-
-	return nil
-
+	return false
 }
 
-type Claims struct {
-	UserId string `json:"user_id"`
-	jwt.RegisteredClaims
+// HandleTokenRefresh handles the token refresh process.
+// It extracts the refresh token from the request, gets a new access token from the storage,
+// and sets the new access token and refresh token as cookies in the response.
+func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s storage.Storage) (string,error) {
+   // Extract the refresh token from the request.
+   refreshToken, err := httputil.ExtractCookie(r, httputil.RefreshTokenCookie)
+   if err != nil {
+   	// Log the error and return an unauthorized error.
+   	logger.Log.Debug("missing or invalid refresh token", zap.Error(err))
+   	return "",fmt.Errorf("unauthorized: %v", err)
+   }
+
+   // Create a context with a timeout of 5 seconds.
+   ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+   defer cancel()
+
+   // Get a new access token from the storage.
+   newAccessToken, refreshToken, err := s.GetNewAccessToken(ctx, refreshToken)
+   if err != nil {
+   	// Return the error if there was a problem getting the new access token.
+   	return "", err
+   }
+
+   // Set the new access token and refresh token as cookies in the response.
+   httputil.SetCookie(w, httputil.AccessTokenCookie, newAccessToken, httputil.AccessTokenExpiry)
+   httputil.SetCookie(w, httputil.RefreshTokenCookie, refreshToken, httputil.RefreshTokenExpiry)
+   return newAccessToken, nil
 }
 
-func GenerateAccessToken(userId string, secretKey *config.Config) (string, error) {
-	sKey := secretKey.JWTSecretKey
-
-	claims := &Claims{
-		UserId: userId,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 15)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(sKey))
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
+func SetCSRFToken(w http.ResponseWriter, userID string) (string, error) {
+	token := "csrf-token-example" // Заглушка
+	w.Header().Set("X-CSRF-Token", token)
+	return token, nil
 }
 
-func GenerateRefreshToken(userId string) (string, error) {
-	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-	stringToken := hex.EncodeToString(b)
-	return stringToken, nil
+func ValidateCSRFToken(r *http.Request) bool {
+	return true // Заглушка, 
 }

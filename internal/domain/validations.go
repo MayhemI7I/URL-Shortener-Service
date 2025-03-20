@@ -16,7 +16,7 @@ func (u *URLPair) Validate() error {
 }
 
 func (ud *URLData) Validate() error {
-	if ud.UserID == "" {
+	if ud.ID == "" {
 		return fmt.Errorf("user ID is required")
 	}
 	if ud.ShortURL == "" {
@@ -31,9 +31,6 @@ func (ud *URLData) Validate() error {
 func (rt *RefreshToken) Validate() error {
 	if rt.Token == "" {
 		return fmt.Errorf("refresh token is required")
-	}
-	if rt.UserID == "" {
-		return fmt.Errorf("user ID is required")
 	}
 	if rt.ExpiresAt.IsZero() || rt.ExpiresAt.Before(time.Now()) {
 		return fmt.Errorf("invalid expiration for refresh token")

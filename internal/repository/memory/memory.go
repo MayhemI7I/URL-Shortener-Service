@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"local/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/domain"
 )
 
 // Storage represents an in-memory storage for URL pairs and refresh tokens.
@@ -29,7 +29,7 @@ func NewMemoryStorage() (*Storage, error) {
 
 // newURLData creates a new URLData instance with the given short URL, original URL, and user ID.
 // The CreatedAt field is set to the current time.
-func newURLData(shortURL, origURL, userID string) *domain.URLData {
+func NewURLRepository(shortURL, origURL, userID string) *domain.URLData {
 	return &domain.URLData{
 		UserID: userID,
 		URLPair: domain.URLPair{
@@ -65,7 +65,7 @@ func (ms *Storage) Save(ctx context.Context, shortURL, origURL, userID string) e
 	}
 
 	// Create and store the new URL data
-	urlData := newURLData(shortURL, origURL, userID)
+	urlData := NewURLRepository(shortURL, origURL, userID)
 	ms.urls[shortURL] = *urlData
 	ms.longURLs[origURL] = shortURL
 
@@ -92,7 +92,7 @@ func (ms *Storage) Get(ctx context.Context, shortURL string) (string, error) {
 
 // FindByLongURL retrieves the short URL for a given long URL from memory.
 // Returns the short URL and an error if the long URL is not found or the context is canceled.
-func (ms *Storage) FindByLongURL(ctx context.Context, longURL string) (string, error) {
+func (ms *Storage) GetByOriginalURL(ctx context.Context, originalURL string) (string, error) {
 	select {
 	case <-ctx.Done():
 		return "", ctx.Err()
@@ -101,7 +101,7 @@ func (ms *Storage) FindByLongURL(ctx context.Context, longURL string) (string, e
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()
 
-	shortURL, ok := ms.longURLs[longURL]
+	shortURL, ok := ms.longURLs[originalURL]
 	if !ok {
 		return "", errors.New("long URL not found")
 	}

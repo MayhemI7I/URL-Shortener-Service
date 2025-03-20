@@ -1,8 +1,6 @@
-module local
+module github.com/MayhemI7I/URL-Shortener-Service
 
-go 1.24
-
-toolchain go1.24.0
+go 1.24.1
 
 require (
 	github.com/go-resty/resty/v2 v2.16.5

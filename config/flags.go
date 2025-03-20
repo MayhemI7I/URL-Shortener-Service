@@ -1,7 +1,7 @@
 package config
 
 import (
-	"local/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 	"os"
 
 	"github.com/spf13/pflag"
@@ -17,7 +17,9 @@ type Config struct {
 	FileStorage  string
 	DataBaseDSN  string
 	URLLength    uint16
-	JWTSecretKey    string
+    JWTSecretKey    string
+	ShutdownTimeout string
+
 }
 
 // InitConfig initializes the configuration for the application.
@@ -33,6 +35,7 @@ func InitConfig() *Config {
 	pflag.StringVarP(&cfg.DataBaseDSN, "database-dsn", "d", "postgres://postgres:1@localhost:5432/usvideos", "PostgreSQL DSN")
 	pflag.Uint16VarP(&cfg.URLLength, "url-length", "l", 8, "URL length")
 	pflag.StringVarP(&cfg.JWTSecretKey, "jwt-secret", "j", "secret", "JWT secret")
+	pflag.StringVarP(&cfg.ShutdownTimeout, "shutdown-timeout",  "t", "10", "Shutdown timeout")
 	// Override configuration with environment variables if they are set
 	if envServerAdress := os.Getenv("SERVER_ADDRESS"); envServerAdress != "" {
 		cfg.ServerAdress = envServerAdress
@@ -61,6 +64,10 @@ func InitConfig() *Config {
 	}
 	if envJWTSecret := os.Getenv("JWT_SECRET"); envJWTSecret != "" {
 		cfg.JWTSecretKey = envJWTSecret
+	}
+	if envShutdownTimeout := os.Getenv("SHUTDOWN_TIMEOUT"); envShutdownTimeout != "" {
+		cfg.ShutdownTimeout = envShutdownTimeout
+
 	}
 
 	// Parse command-line flags
