@@ -219,7 +219,7 @@ func (s *Storage) GetUserAllURLs(ctx context.Context, userID string) ([]domain.U
 }
 
 // SaveRefreshToken сохраняет refresh-токен
-func (s *Storage) SaveRefreshToken(ctx context.Context, refreshToken, userID string, expiresAt time.Time) error {
+func (s *Storage) SaveRefreshToken(ctx context.Context, refreshToken *domain.RefreshToken) error {
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
@@ -230,23 +230,23 @@ func (s *Storage) SaveRefreshToken(ctx context.Context, refreshToken, userID str
 	defer s.mu.Unlock()
 
 	// Обновляем данные пользователя или создаем новые
-	data, exists := s.urls[userID] // Используем userID как ключ для простоты
+	data, exists := s.urls[refreshToken.User.ID] // Используем userID как ключ для простоты
 	if !exists {
 		data = domain.URLData{
-			User: domain.User{ID: userID},
+			User: domain.User{ID: refreshToken.User.ID},
 		}
 	}
-	data.User.RefreshToken = refreshToken
-	data.User.RefreshExpiresAt = expiresAt
-	s.urls[userID] = data
+	data.User.RefreshToken = refreshToken.Token
+	data.User.RefreshExpiresAt = refreshToken.ExpiresAt
+	s.urls[refreshToken.User.ID] = data
 
 	if err := s.saveToFile(); err != nil {
 		return err
 	}
 
 	logger.Log.Debug("refresh token saved",
-		zap.String("refresh_token", refreshToken),
-		zap.String("user_id", userID))
+		zap.String("refresh_token", refreshToken.Token),
+		zap.String("user_id", refreshToken.User.ID))
 	return nil
 }
 
@@ -310,10 +310,16 @@ func (s *Storage) GetNewAccessToken(ctx context.Context, refreshToken string) (s
 			return "", "", err
 		}
 		newExpiresAt := time.Now().Add(jwtutil.RefreshTokenExpiration)
-		userData.User.RefreshToken = newRefreshToken
-		userData.User.RefreshExpiresAt = newExpiresAt
-		s.urls[userData.User.ID] = userData
-		if err := s.saveToFile(); err != nil {
+		
+		// Создаем объект RefreshToken для сохранения
+		tokenObj := &domain.RefreshToken{
+			User: domain.User{ID: userData.User.ID},
+			Token: newRefreshToken,
+			ExpiresAt: newExpiresAt,
+		}
+		
+		// Сохраняем через обновленный метод
+		if err := s.SaveRefreshToken(ctx, tokenObj); err != nil {
 			return "", "", err
 		}
 	}

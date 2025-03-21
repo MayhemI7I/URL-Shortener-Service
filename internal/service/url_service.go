@@ -20,7 +20,7 @@ func NewURLService(repo interfaces.URLRepository) interfaces.URLService {
 }
 
 // Create создает новую короткую ссылку.
-func (s *urlService) Create(ctx context.Context, origURL string, userID string) (*models.URLPair, error) {
+func (s *urlService) AddUserURL(ctx context.Context, shortURL, origURL, userID string) error {
 	// Проверяем нет ли уже в базе
 	existingURL, err := s.repo.GetByOriginalURL(ctx, origURL)
 	if err == nil && existingURL != nil {
@@ -36,7 +36,7 @@ func (s *urlService) Create(ctx context.Context, origURL string, userID string) 
 		UserID:    userID,
 	}
 
-	err = s.repo.Create(ctx, urlPair) // Сохраняем через репозиторий
+	err = s.repo.AddUserURL(ctx, shortURL, origURL, userID) // Сохраняем через репозиторий
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (s *urlService) Get(ctx context.Context, shortURL string) (*models.URLPair,
 }
 
 // List получает список URL пользователя.
-func (s *urlService) List(ctx context.Context, userID string) ([]*models.URLPair, error) {
+func (s *urlService) ListUserURLs(ctx context.Context, userID string) ([]*models.URLData, error) {
 	return s.repo.ListByUser(ctx, userID) // Получаем через репозиторий
 }
 

@@ -1,15 +1,15 @@
-package domain
+package models
 
 import (
 	"fmt"
 	"time"
 )
 
-func (u *URLPair) Validate() error {
+func (u *URLInfo) Validate() error {
 	if u.OrigURL == "" {
 		return fmt.Errorf("original URL is required")
 	}
-	if u.OrigURL == "" {
+	if u.ShortURL == "" {
 		return fmt.Errorf("short URL is required")
 	}
 	return nil
@@ -23,7 +23,7 @@ func (ud *URLData) Validate() error {
 		return fmt.Errorf("short URL is required")
 	}
 	if ud.OrigURL == "" {
-
+		return fmt.Errorf("original URL is required")
 	}
 	return nil
 }
@@ -40,7 +40,7 @@ func (rt *RefreshToken) Validate() error {
 
 func (u *User) Validate() error {
 	if u.ID == "" {
-		return fmt.Errorf("user IS is required")
+		return fmt.Errorf("user ID is required")
 	}
 	return nil
 }

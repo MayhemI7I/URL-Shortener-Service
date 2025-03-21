@@ -11,8 +11,8 @@ import (
 	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
@@ -102,8 +102,8 @@ func (pg *PostgresStorage) Get(ctx context.Context, shortURL string, userID stri
 	return origURL, nil
 }
 
-// GetUserURLs возвращает все URL пользователя
-func (pg *PostgresStorage) GetUserAllURLs(ctx context.Context, userID string) ([]domain.URLData, error) {
+// ListByUser возвращает все URL пользователя
+func (pg *PostgresStorage) ListByUser(ctx context.Context, userID string) ([]domain.URLData, error) {
 	var urls []domain.URLData
 	query := `SELECT user_id,short_url, original_url, created_at FROM short_urls WHERE user_id = $1`
 	err := pg.db.SelectContext(ctx, &urls, query, userID)
@@ -119,8 +119,8 @@ func (pg *PostgresStorage) GetUserAllURLs(ctx context.Context, userID string) ([
 	return urls, nil
 }
 
-// Save сохраняет короткий URL
-func (pg *PostgresStorage) Save(ctx context.Context, shortURL, origURL, userID string) error {
+// AddUserURL созраняет пару короткий и длинный URL  пользователя
+func (pg *PostgresStorage) AddUserURL(ctx context.Context, shortURL, origURL, userID string) error {
 	query := `
 		INSERT INTO short_urls (short_url, original_url, user_id) 
 		VALUES ($1, $2, $3) 
@@ -156,80 +156,85 @@ func (pg *PostgresStorage) FindByOriginalURL(ctx context.Context, origURL, userI
 	return shortURL, nil
 }
 
-// GetUserIDByRefreshToken возвращает user_id по refresh-токену
-func (pg *PostgresStorage) GetUserIDByRefreshToken(ctx context.Context, refreshToken string) (string, error) {
-	var userID string
+// GetUserByRefreshToken возвращает пользователя по refresh-токену
+func (pg *PostgresStorage) GetUserByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error) {
+	var user domain.User
 	query := `SELECT user_id FROM refresh_tokens WHERE refresh_token = $1`
-	err := pg.db.GetContext(ctx, &userID, query, refreshToken)
+	err := pg.db.GetContext(ctx, &user.ID, query, refreshToken)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", domain.ErrTokenNotFound
+			return nil, domain.ErrTokenNotFound
 		}
-		logger.Log.Error("failed to get user ID by refresh token", zap.String("refresh_token", refreshToken), zap.Error(err))
-		return "", err
+		logger.Log.Error("failed to get user by refresh token", zap.String("refresh_token", refreshToken), zap.Error(err))
+		return nil, err
 	}
-	return userID, nil
+	return &user, nil
 }
-
 
 // GetNewAccessToken retrieves a new access token and refresh token for the given refresh token.
 // If the refresh token is expired, it generates a new refresh token and saves it to the database.
 func (pg *PostgresStorage) GetNewAccessToken(ctx context.Context, refreshToken string) (string, string, error) {
-   var (
-       userID    string
-       expiresAt time.Time
-   )
-   query := `SELECT user_id, expires_at FROM refresh_tokens WHERE refresh_token = $1`
-   // Используем указатели, чтобы данные записывались в переменные
-   err := pg.db.QueryRowContext(ctx, query, refreshToken).Scan(&userID, &expiresAt)
-   if err != nil {
-       if err == sql.ErrNoRows {
-           return "", "", domain.ErrTokenNotFound
-       }
-       logger.Log.Error("ошибка при запросе refresh-токена из базы", zap.Error(err))
-       return "", "", err
-   }
-   newRefreshToken := refreshToken
+	var (
+		userID    string
+		expiresAt time.Time
+	)
+	query := `SELECT user_id, expires_at FROM refresh_tokens WHERE refresh_token = $1`
+	// Используем указатели, чтобы данные записывались в переменные
+	err := pg.db.QueryRowContext(ctx, query, refreshToken).Scan(&userID, &expiresAt)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", "", domain.ErrTokenNotFound
+		}
+		logger.Log.Error("ошибка при запросе refresh-токена из базы", zap.Error(err))
+		return "", "", err
+	}
+	newRefreshToken := refreshToken
 
-   if time.Now().After(expiresAt) {
-   	logger.Log.Debug("refresh token expired", zap.String("refresh_token", refreshToken))
-   	newRefreshToken, err = jwtutil.GenerateRefreshToken()
-   	if err != nil {
-   		return "", "", err
-   	}
-   	newExpiresAt := time.Now().Add(jwtutil.RefreshTokenExpiration)
-   	err = pg.SaveRefreshToken(ctx, newRefreshToken, userID , newExpiresAt)
-   	if err != nil {
-   		logger.Log.Error(err)
-   		return "", "", err
-   	}
-   	
-   }
-   secretKey := os.Getenv("JWT_SECRET")
+	if time.Now().After(expiresAt) {
+		logger.Log.Debug("refresh token expired", zap.String("refresh_token", refreshToken))
+		newRefreshToken, err = jwtutil.GenerateRefreshToken()
+		if err != nil {
+			return "", "", err
+		}
+		newExpiresAt := time.Now().Add(jwtutil.RefreshTokenExpiration)
 
-   accessToken, err := jwtutil.GenerateAccessToken(userID, secretKey) 
-   if err != nil {
-   	return "", "", err
-   }
+		// Создаем объект RefreshToken для сохранения
+		tokenObj := &domain.RefreshToken{
+			User:      domain.User{ID: userID},
+			Token:     newRefreshToken,
+			ExpiresAt: newExpiresAt,
+		}
 
-   return accessToken, newRefreshToken, nil
+		err = pg.SaveRefreshToken(ctx, tokenObj)
+		if err != nil {
+			logger.Log.Error(err)
+			return "", "", err
+		}
+	}
+	secretKey := os.Getenv("JWT_SECRET")
+
+	accessToken, err := jwtutil.GenerateAccessToken(userID, secretKey)
+	if err != nil {
+		return "", "", err
+	}
+
+	return accessToken, newRefreshToken, nil
 }
 
-
 // SaveRefreshToken сохраняет refresh-токен
-func (pg *PostgresStorage) SaveRefreshToken(ctx context.Context, refreshToken, userID string, expiresAt time.Time) error {
+func (pg *PostgresStorage) SaveRefreshToken(ctx context.Context, refreshToken *domain.RefreshToken) error {
 	query := `
 		INSERT INTO refresh_tokens (refresh_token, user_id, expires_at) 
 		VALUES ($1, $2, $3) 
 		ON CONFLICT (refresh_token) 
 		DO UPDATE SET expires_at = EXCLUDED.expires_at, user_id = EXCLUDED.user_id
 	`
-	_, err := pg.db.ExecContext(ctx, query, refreshToken, userID, expiresAt)
+	_, err := pg.db.ExecContext(ctx, query, refreshToken.Token, refreshToken.User.ID, refreshToken.ExpiresAt)
 	if err != nil {
-		logger.Log.Error("failed to save refresh token", zap.String("refresh_token", refreshToken), zap.Error(err))
+		logger.Log.Error("failed to save refresh token", zap.String("refresh_token", refreshToken.Token), zap.Error(err))
 		return err
 	}
-	logger.Log.Debug("refresh token saved", zap.String("refresh_token", refreshToken), zap.String("user_id", userID))
+	logger.Log.Debug("refresh token saved", zap.String("refresh_token", refreshToken.Token), zap.String("user_id", refreshToken.User.ID))
 	return nil
 }
 
@@ -248,5 +253,3 @@ func (pg *PostgresStorage) DeleteRefreshToken(ctx context.Context, refreshToken 
 	logger.Log.Debug("refresh token deleted", zap.String("refresh_token", refreshToken))
 	return nil
 }
-
-
