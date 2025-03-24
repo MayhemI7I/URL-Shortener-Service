@@ -11,8 +11,11 @@ type URLRepository interface {
 	// Create создает новую запись URL
 	AddUserURL(ctx context.Context, url *models.URLData) error
 
-	// GetByOriginalURL получает сокращенный URL по оригинальному URL
+	// FindByOriginalURL получает сокращенный URL по оригинальному URL
 	FindByOriginalURL(ctx context.Context, originalURL string) (*models.URLData, error)
+
+	// FindByShortURL получает оригинальный URL по короткой ссылке
+	FindByShortURL(ctx context.Context, shortURL string) (*models.URLData, error)
 
 	// List получает список всех URL пользователя
 	ListByUser(ctx context.Context, userID string) ([]*models.URLData, error)
@@ -20,14 +23,13 @@ type URLRepository interface {
 	// Помечает URL как удаленный
 	MarkAsDeleted(ctx context.Context, shortURL string) error
 
-	// Структурированные данные из моделей домена
-	CreateUserURL(ctx context.Context, userID string, url *models.URLData) error
 }
 
 // UserRepository определяет методы для работы с пользователями
 type UserRepository interface {
-	// Get получает пользователя по ID
-	Get(ctx context.Context, userID string) (*models.User, error)
+	// GetUserById получает пользователя по ID
+	GetUserById(ctx context.Context, userID string) (*models.User, error)
+
 
 	// SaveRefreshToken сохраняет токен обновления для пользователя
 	// Если пользователь не существует, он будет создан

@@ -7,20 +7,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage"
-	"github.com/MayhemI7I/URL-Shortener-Service/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/httputil"
+	"github.com/MayhemI7I/URL-Shortener-Service/pkg/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/httputil"
 )
 
-func IsTokenExpired(err error) bool {
-	if ve, ok := err.(*jwt.ValidationError); ok {
-		return ve.Errors&jwt.ValidationErrorExpired != 0
-	}
-	return false
-}
 
 // HandleTokenRefresh handles the token refresh process.
 // It extracts the refresh token from the request, gets a new access token from the storage,

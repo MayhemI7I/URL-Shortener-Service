@@ -21,7 +21,7 @@ type AuthHandler struct{
 func NewAuthHandler(s storage.Storage)*AuthHandler{
 	return &AuthHandler{storage: s,}
 }
-func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (ah *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
    ctx := r.Context()
    id := uuid.New().String()
    refreshTokenStr, err := jwtutil.GenerateRefreshToken()

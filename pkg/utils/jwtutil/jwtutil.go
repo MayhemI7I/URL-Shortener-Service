@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"crypto/rand"
 	"encoding/hex"
-	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 	"go.uber.org/zap"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 
 	"github.com/golang-jwt/jwt/v4"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/domain"
 )
 var (
     AccessTokenExpiration  = 15 * time.Minute // Время жизни access-токена: 15 минут
@@ -20,7 +20,7 @@ var (
 
 // GenerateAccessToken creates a new JWT access token
 func GenerateAccessToken(userID, secretKey string) (string, error) {
-	claims := &domain.Claims{
+	claims := &models.Claims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(15 * time.Minute)),
@@ -42,9 +42,9 @@ func GenerateRefreshToken() (string, error) {
 }
 
 
-// ParseJWT parses and validates a JWT token, returning the claims
-func ParseJWT(tokenString string) (*domain.Claims, error) {
-	claims := &domain.Claims{}
+// ParseJWT parses and validates a JWT access token, returning the claims
+func ParseJWT(tokenString string) (*models.Claims, error) {
+	claims := &models.Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || token.Method.Alg() != jwt.SigningMethodHS256.Alg() {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -59,3 +59,12 @@ func ParseJWT(tokenString string) (*domain.Claims, error) {
 	}
 	return claims, nil
 }
+
+// IsTokenExpired checks if the token is expired
+func IsTokenExpired(err error) bool {
+	if ve, ok := err.(*jwt.ValidationError); ok {
+		return ve.Errors&jwt.ValidationErrorExpired != 0
+	}
+	return false
+}
+

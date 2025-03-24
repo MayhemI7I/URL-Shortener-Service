@@ -8,29 +8,28 @@ import (
 
 // URLService определяет бизнес-логику для работы с URL
 type URLService interface {
-	// Create создает новую короткую ссылку
-	Create(ctx context.Context, longURL string, userID string) (*models.URLData, error)
+	// CreateShortURL создает новую короткую ссылку
+	CreateShortURL(ctx context.Context, longURL, userID string) (*models.URLData, error)
 
-	// Get получает оригинальный URL по короткой ссылке
-	Get(ctx context.Context, shortURL string) (*models.URLInfo, error)
+	// GetOriginalURL получает оригинальный URL по короткой ссылке
+	GetOriginalURL(ctx context.Context, shortURL string) (*models.URLInfo, error)
 
-	// List получает список URL пользователя
-	List(ctx context.Context, userID string) ([]*models.URLInfo, error)
+	// GetShortURL получает короткую ссылку по оригинальному URL
+	GetShortURL(ctx context.Context, originalURL string) (*models.URLInfo, error)
 
-	// Delete удаляет URL
-	Delete(ctx context.Context, shortURL string) error
+	// GetUserURLs получает список URL пользователя
+	GetUserURLs(ctx context.Context, userID string) ([]*models.URLInfo, error)
+
+	// DeleteURL удаляет URL
+	DeleteURL(ctx context.Context, shortURL string) error
 }
 
 // AuthService определяет бизнес-логику для аутентификации
 type AuthService interface {
 	// Register регистрирует нового пользователя
-	Register(ctx context.Context, user *models.RefreshToken) (*models.User, error)
+	Register(ctx context.Context,cfg string)  error
 
-	// RefreshTokens обновляет токены пользователя
-	RefreshTokens(ctx context.Context, user *models.User) (*models.User, error)
+	// RefreshToken обновляет токен пользователя
+	RefreshToken(ctx context.Context, user *models.RefreshToken) error
 
-	// ValidateToken проверяет токен
-	ValidateToken(ctx context.Context, token string) (*models.User, error)
 }
-
-

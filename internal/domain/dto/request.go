@@ -1,4 +1,4 @@
-package models
+package dto
 
 
 // URLCreateRequest запрос на создание нового URL
