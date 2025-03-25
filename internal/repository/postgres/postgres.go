@@ -4,26 +4,24 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"os"
-	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/domain"
-	"github.com/MayhemI7I/URL-Shortener-Service/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
-type PostgresStorage struct {
-	db *sqlx.DB
+// DB представляет общее подключение к базе данных
+type DB struct {
+	*sqlx.DB
 }
 
-var secretKey = (os.Getenv("JWT-SECRET")) // Лучше вынести в конфигурацию
-
-// NewPostgresStorage создаёт новое подключение к PostgreSQL
-func NewPostgresStorage(dsn string) (*PostgresStorage, error) {
+// NewDB создаёт новое подключение к PostgreSQL
+func NewDB(dsn string) (*DB, error) {
 	db, err := sqlx.Open("pgx", dsn)
 	if err != nil {
 		logger.Log.Error("failed to open database", zap.Error(err))
@@ -74,16 +72,25 @@ func NewPostgresStorage(dsn string) (*PostgresStorage, error) {
 	}
 
 	logger.Log.Info("database, tables, and indexes initialized successfully")
-	return &PostgresStorage{db: db}, nil
+	return &DB{db}, nil
 }
 
 // Close закрывает соединение с базой данных
-func (pg *PostgresStorage) Close() error {
-	err := pg.db.Close()
+func (db *DB) Close() error {
+	err := db.DB.Close()
 	if err != nil {
 		logger.Log.Error("failed to close database connection", zap.Error(err))
 	}
 	return err
+}
+
+type PostgresStorage struct {
+	db *DB
+}
+
+// NewPostgresURLStorage создаёт новое хранилище URL
+func NewPostgresURLStorage(db *DB) interfaces.URLRepository {
+	return &PostgresStorage{db: db}
 }
 
 // Get возвращает длинный URL по короткому
@@ -103,9 +110,9 @@ func (pg *PostgresStorage) Get(ctx context.Context, shortURL string, userID stri
 }
 
 // ListByUser возвращает все URL пользователя
-func (pg *PostgresStorage) ListByUser(ctx context.Context, userID string) ([]domain.URLData, error) {
-	var urls []domain.URLData
-	query := `SELECT user_id,short_url, original_url, created_at FROM short_urls WHERE user_id = $1`
+func (pg *PostgresStorage) ListByUser(ctx context.Context, userID string) ([]*models.URLData, error) {
+	var urls []*models.URLData
+	query := `SELECT user_id, short_url, original_url, created_at FROM short_urls WHERE user_id = $1`
 	err := pg.db.SelectContext(ctx, &urls, query, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -119,8 +126,8 @@ func (pg *PostgresStorage) ListByUser(ctx context.Context, userID string) ([]dom
 	return urls, nil
 }
 
-// AddUserURL созраняет пару короткий и длинный URL  пользователя
-func (pg *PostgresStorage) AddUserURL(ctx context.Context, shortURL, origURL, userID string) error {
+// AddUserURL сохраняет пару короткий и длинный URL пользователя
+func (pg *PostgresStorage) AddUserURL(ctx context.Context, url *models.URLData) error {
 	query := `
 		INSERT INTO short_urls (short_url, original_url, user_id) 
 		VALUES ($1, $2, $3) 
@@ -128,128 +135,61 @@ func (pg *PostgresStorage) AddUserURL(ctx context.Context, shortURL, origURL, us
 		DO UPDATE SET original_url = EXCLUDED.original_url 
 		WHERE short_urls.user_id = $3
 	`
-	result, err := pg.db.ExecContext(ctx, query, shortURL, origURL, userID)
+	result, err := pg.db.ExecContext(ctx, query, url.ShortURL, url.OrigURL, url.User.ID)
 	if err != nil {
-		logger.Log.Error("failed to save short URL", zap.String("short_url", shortURL), zap.Error(err))
+		logger.Log.Error("failed to save short URL", zap.String("short_url", url.ShortURL), zap.Error(err))
 		return err
 	}
 	rows, _ := result.RowsAffected()
 	if rows == 0 {
 		return domain.ErrURLExists // Если конфликт и ничего не обновлено
 	}
-	logger.Log.Debug("short URL saved", zap.String("short_url", shortURL), zap.String("user_id", userID))
+	logger.Log.Debug("short URL saved", zap.String("short_url", url.ShortURL), zap.String("user_id", url.User.ID))
 	return nil
 }
 
 // FindByOriginalURL ищет короткий URL по длинному
-func (pg *PostgresStorage) FindByOriginalURL(ctx context.Context, origURL, userID string) (string, error) {
-	var shortURL string
-	query := `SELECT short_url FROM short_urls WHERE original_url = $1 AND user_id = $2`
-	err := pg.db.GetContext(ctx, &shortURL, query, origURL, userID)
+func (pg *PostgresStorage) FindByOriginalURL(ctx context.Context, originalURL string) (*models.URLData, error) {
+	var data models.URLData
+	query := `SELECT user_id, short_url, original_url, created_at FROM short_urls WHERE original_url = $1`
+	err := pg.db.GetContext(ctx, &data, query, originalURL)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", domain.ErrURLNotFound
+			return nil, domain.ErrURLNotFound
 		}
-		logger.Log.Error("failed to find short URL by original URL", zap.String("original_url", origURL), zap.String("user_id", userID), zap.Error(err))
-		return "", err
-	}
-	return shortURL, nil
-}
-
-// GetUserByRefreshToken возвращает пользователя по refresh-токену
-func (pg *PostgresStorage) GetUserByRefreshToken(ctx context.Context, refreshToken string) (*domain.User, error) {
-	var user domain.User
-	query := `SELECT user_id FROM refresh_tokens WHERE refresh_token = $1`
-	err := pg.db.GetContext(ctx, &user.ID, query, refreshToken)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, domain.ErrTokenNotFound
-		}
-		logger.Log.Error("failed to get user by refresh token", zap.String("refresh_token", refreshToken), zap.Error(err))
+		logger.Log.Error("failed to find short URL by original URL", zap.String("original_url", originalURL), zap.Error(err))
 		return nil, err
 	}
-	return &user, nil
+	return &data, nil
 }
 
-// GetNewAccessToken retrieves a new access token and refresh token for the given refresh token.
-// If the refresh token is expired, it generates a new refresh token and saves it to the database.
-func (pg *PostgresStorage) GetNewAccessToken(ctx context.Context, refreshToken string) (string, string, error) {
-	var (
-		userID    string
-		expiresAt time.Time
-	)
-	query := `SELECT user_id, expires_at FROM refresh_tokens WHERE refresh_token = $1`
-	// Используем указатели, чтобы данные записывались в переменные
-	err := pg.db.QueryRowContext(ctx, query, refreshToken).Scan(&userID, &expiresAt)
+// FindByShortURL ищет длинный URL по короткому
+func (pg *PostgresStorage) FindByShortURL(ctx context.Context, shortURL string) (*models.URLData, error) {
+	var data models.URLData
+	query := `SELECT user_id, short_url, original_url, created_at FROM short_urls WHERE short_url = $1`
+	err := pg.db.GetContext(ctx, &data, query, shortURL)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return "", "", domain.ErrTokenNotFound
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, domain.ErrURLNotFound
 		}
-		logger.Log.Error("ошибка при запросе refresh-токена из базы", zap.Error(err))
-		return "", "", err
+		logger.Log.Error("failed to find short URL by original URL", zap.String("original_url", data.OrigURL), zap.Error(err))
+		return nil, err
 	}
-	newRefreshToken := refreshToken
-
-	if time.Now().After(expiresAt) {
-		logger.Log.Debug("refresh token expired", zap.String("refresh_token", refreshToken))
-		newRefreshToken, err = jwtutil.GenerateRefreshToken()
-		if err != nil {
-			return "", "", err
-		}
-		newExpiresAt := time.Now().Add(jwtutil.RefreshTokenExpiration)
-
-		// Создаем объект RefreshToken для сохранения
-		tokenObj := &domain.RefreshToken{
-			User:      domain.User{ID: userID},
-			Token:     newRefreshToken,
-			ExpiresAt: newExpiresAt,
-		}
-
-		err = pg.SaveRefreshToken(ctx, tokenObj)
-		if err != nil {
-			logger.Log.Error(err)
-			return "", "", err
-		}
-	}
-	secretKey := os.Getenv("JWT_SECRET")
-
-	accessToken, err := jwtutil.GenerateAccessToken(userID, secretKey)
-	if err != nil {
-		return "", "", err
-	}
-
-	return accessToken, newRefreshToken, nil
+	return &data, nil
 }
 
-// SaveRefreshToken сохраняет refresh-токен
-func (pg *PostgresStorage) SaveRefreshToken(ctx context.Context, refreshToken *domain.RefreshToken) error {
-	query := `
-		INSERT INTO refresh_tokens (refresh_token, user_id, expires_at) 
-		VALUES ($1, $2, $3) 
-		ON CONFLICT (refresh_token) 
-		DO UPDATE SET expires_at = EXCLUDED.expires_at, user_id = EXCLUDED.user_id
-	`
-	_, err := pg.db.ExecContext(ctx, query, refreshToken.Token, refreshToken.User.ID, refreshToken.ExpiresAt)
+// MarkAsDeleted помечает URL как удаленный
+func (pg *PostgresStorage) MarkAsDeleted(ctx context.Context, shortURL string) error {
+	query := `UPDATE short_urls SET deleted_flag = TRUE WHERE short_url = $1`
+	result, err := pg.db.ExecContext(ctx, query, shortURL)
 	if err != nil {
-		logger.Log.Error("failed to save refresh token", zap.String("refresh_token", refreshToken.Token), zap.Error(err))
-		return err
-	}
-	logger.Log.Debug("refresh token saved", zap.String("refresh_token", refreshToken.Token), zap.String("user_id", refreshToken.User.ID))
-	return nil
-}
-
-// DeleteRefreshToken удаляет refresh-токен
-func (pg *PostgresStorage) DeleteRefreshToken(ctx context.Context, refreshToken string) error {
-	query := `DELETE FROM refresh_tokens WHERE refresh_token = $1`
-	result, err := pg.db.ExecContext(ctx, query, refreshToken)
-	if err != nil {
-		logger.Log.Error("failed to delete refresh token", zap.String("refresh_token", refreshToken), zap.Error(err))
+		logger.Log.Error("failed to mark URL as deleted", zap.String("short_url", shortURL), zap.Error(err))
 		return err
 	}
 	rows, _ := result.RowsAffected()
 	if rows == 0 {
-		return domain.ErrTokenNotFound
+		return domain.ErrURLNotFound
 	}
-	logger.Log.Debug("refresh token deleted", zap.String("refresh_token", refreshToken))
+	logger.Log.Debug("URL marked as deleted", zap.String("short_url", shortURL))
 	return nil
 }

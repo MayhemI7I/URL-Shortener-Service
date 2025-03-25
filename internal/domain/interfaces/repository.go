@@ -22,14 +22,13 @@ type URLRepository interface {
 
 	// Помечает URL как удаленный
 	MarkAsDeleted(ctx context.Context, shortURL string) error
-
 }
 
 // UserRepository определяет методы для работы с пользователями
 type UserRepository interface {
+
 	// GetUserById получает пользователя по ID
 	GetUserById(ctx context.Context, userID string) (*models.User, error)
-
 
 	// SaveRefreshToken сохраняет токен обновления для пользователя
 	// Если пользователь не существует, он будет создан

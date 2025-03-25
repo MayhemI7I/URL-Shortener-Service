@@ -13,19 +13,19 @@ type URLService struct {
 	generator interfaces.URLGenerator
 }
 
-func NewURLService(repo interfaces.URLRepository, generator interfaces.URLGenerator) *URLService {
+func NewURLService(repo interfaces.URLRepository, generator interfaces.URLGenerator) interfaces.URLService {
 	return &URLService{repo: repo, generator: generator}
 }
 
 // CreateShortURL реализует метод создания короткой ссылки из interfaces.URLService
-func (s *URLService) CreateShortURL(ctx context.Context, longURL, userID string) (*models.URLData, error) {
+func (s *URLService) CreateShortURL(ctx context.Context, originalURL, userID string) (*models.URLData, error) {
 	// Проверяем существование URL
-	if existing, err := s.repo.FindByOriginalURL(ctx, longURL); err == nil {
+	if existing, err := s.repo.FindByOriginalURL(ctx, originalURL); err == nil {
 		return existing, nil
 	}
 
 	// Генерируем короткий URL
-	shortURL, err := s.generator.Generate(ctx, longURL)
+	shortURL, err := s.generator.Generate(ctx, originalURL)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (s *URLService) CreateShortURL(ctx context.Context, longURL, userID string)
 		User: models.User{ID: userID},
 		URLInfo: models.URLInfo{
 			ShortURL: shortURL,
-			OrigURL:  longURL,
+			OrigURL:  originalURL,
 		},
 	}
 
@@ -82,4 +82,3 @@ func (s *URLService) GetUserURLs(ctx context.Context, userID string) ([]*models.
 func (s *URLService) DeleteURL(ctx context.Context, shortURL string) error {
 	return s.repo.MarkAsDeleted(ctx, shortURL)
 }
-

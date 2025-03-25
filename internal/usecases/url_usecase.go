@@ -3,18 +3,17 @@ package usecases
 import (
 	"context"
 
-
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/services"
 )
 
 // URLUseCase содержит бизнес-логику для работы с URL
 type URLUseCase struct {
-	service services.URLService
+	service interfaces.URLService
 }
 
 // NewURLUseCase создаёт новый экземпляр URLUseCase
-func NewURLUseCase(service services.URLService) *URLUseCase {
+func NewURLUseCase(service interfaces.URLService) *URLUseCase {
 	return &URLUseCase{service: service}
 }
 

@@ -12,9 +12,9 @@ type Core struct {
 	urlRepo  interfaces.URLRepository
 	userRepo interfaces.UserRepository
 
-	// Сервисы
-	urlService  interfaces.URLService
-	authService interfaces.AuthService
+	// Use Cases
+	urlUseCase  *URLUseCase
+	authUseCase *AuthUseCase
 	authConfig  interfaces.AuthConfig
 
 	// Утилиты
@@ -35,26 +35,23 @@ func NewCore(
 		authConfig:   authConfig,
 	}
 
-	// Создаем сервисы через фабрики или DI-контейнер
+	// Создаем сервисы
 	urlService := services.NewURLService(urlRepo, urlGenerator)
 	authService := services.NewAuthService(userRepo, authConfig)
 
-	// Передаем сервисы в use cases
-	urlUseCase := NewURLUseCase(urlService)
-	authUseCase := NewAuthUseCase(authService)
-
-	core.urlService = urlUseCase
-	core.authService = authUseCase
+	// Создаем use cases
+	core.urlUseCase = NewURLUseCase(urlService)
+	core.authUseCase = NewAuthUseCase(authService)
 
 	return core
 }
 
-// URLService возвращает сервис для работы с URL
-func (c *Core) URLService() interfaces.URLService {
-	return c.urlService
+// URLService возвращает use case для работы с URL
+func (c *Core) URLService() *URLUseCase {
+	return c.urlUseCase
 }
 
-// AuthService возвращает сервис для работы с аутентификацией
-func (c *Core) AuthService() interfaces.AuthService {
-	return c.authService
+// AuthService возвращает use case для работы с аутентификацией
+func (c *Core) AuthService() *AuthUseCase {
+	return c.authUseCase
 }

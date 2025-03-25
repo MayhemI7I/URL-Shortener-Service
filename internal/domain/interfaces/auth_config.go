@@ -10,4 +10,5 @@ type AuthConfig interface {
 	GetAccessTokenExpiration() time.Duration
 	// GetRefreshTokenExpiration возвращает время жизни refresh токена
 	GetRefreshTokenExpiration() time.Duration
+	
 }

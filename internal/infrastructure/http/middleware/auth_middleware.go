@@ -5,12 +5,12 @@ import (
 	"net/http"
 	
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/storage"
-	"github.com/MayhemI7I/URL-Shortener-Service/handlers/urlhandler"
-	"github.com/MayhemI7I/URL-Shortener-Service/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/httputil"
-	"github.com/MayhemI7I/URL-Shortener-Service/utils/jwtutil"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/auth"
+
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/handlers/urlhandler"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/utils/httputil"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/utils/jwtutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/auth"
 	"go.uber.org/zap"
 )
 // Middleware authenticates requests using JWT tokens and attaches user ID to context

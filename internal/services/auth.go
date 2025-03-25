@@ -18,27 +18,31 @@ type AuthService struct {
 }
 
 // NewAuthService создает новый экземпляр AuthService
-func NewAuthService(repo interfaces.UserRepository, cfg interfaces.AuthConfig) *AuthService {
+func NewAuthService(repo interfaces.UserRepository, cfg interfaces.AuthConfig) interfaces.AuthService {
 	return &AuthService{
 		repo: repo,
 		cfg:  cfg,
 	}
 }
 
-func (s *AuthService) Register(ctx context.Context) error {
+func (s *AuthService) Register(ctx context.Context) (*models.User,error) {
+	user := &models.User{}
+
 	id := uuid.New().String()
 
 	refreshTokenStr, err := jwtutil.GenerateRefreshToken()
 	if err != nil {
-		return err
+		return nil, err
 	}
+	user.ID = id
+	user.CreatedAt = time.Now().UTC()
 
 	// Создаем объект RefreshToken
 	refreshToken := &models.RefreshToken{}
 	refreshToken.ID = id
 	refreshToken.Token = refreshTokenStr
 	refreshToken.ExpiresAt = time.Now().Add(s.cfg.GetRefreshTokenExpiration())
-	return s.repo.SaveRefreshToken(ctx, refreshToken)
+	return user,s.repo.SaveRefreshToken(ctx, refreshToken)
 }
 
 func (s *AuthService) RefreshToken(ctx context.Context, refreshToken *models.RefreshToken) error {
