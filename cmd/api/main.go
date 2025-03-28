@@ -3,69 +3,71 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/config"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/postgres"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/usecases"
-	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/urlutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/server"
 )
 
 func main() {
 	// Инициализация конфигурации
-	cfg, err := config.Load()
-	if err != nil {
-		log.Fatalf("Failed to load config: %v", err)
+	appConfig := config.NewAppConfig()
+	appConfig.AddFlags()
+
+	// Парсинг флагов
+	if err := appConfig.ParseFlags(); err != nil {
+		log.Fatalf("Ошибка парсинга флагов: %v", err)
 	}
 
-	// Инициализация репозиториев
-	urlRepo, err := postgres.NewURLRepository(cfg.DB)
-	if err != nil {
-		log.Fatalf("Failed to create URL repository: %v", err)
+	// Загрузка конфигурации из переменных окружения
+	appConfig.LoadFromEnv()
+
+	// Валидация конфигурации
+	if err := appConfig.Validate(); err != nil {
+		log.Fatalf("Ошибка валидации конфигурации: %v", err)
 	}
 
-	userRepo, err := postgres.NewUserRepository(cfg.DB)
+	// Инициализация логгера
+	logger, err := logger.NewZapLogger(appConfig.Logger)
 	if err != nil {
-		log.Fatalf("Failed to create user repository: %v", err)
+		log.Fatalf("Ошибка инициализации логгера: %v", err)
+	}
+	defer logger.Sync()
+
+	// Создание контекста с отменой
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Инициализация сервера
+	srv := server.NewServer(appConfig, logger)
+
+	// Запуск сервера в горутине
+	go func() {
+		logger.Info("Запуск сервера", "addr", appConfig.GetServerAddr())
+		if err := srv.Start(); err != nil && err != http.ErrServerClosed {
+			logger.Fatal("Ошибка запуска сервера", "error", err)
+		}
+	}()
+
+	// Ожидание сигнала для graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	logger.Info("Получен сигнал завершения работы")
+
+	// Создание контекста с таймаутом для graceful shutdown
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), appConfig.ShutdownTimeout)
+	defer shutdownCancel()
+
+	// Остановка сервера
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		logger.Error("Ошибка при остановке сервера", "error", err)
 	}
 
-	// Инициализация утилит
-	urlGenerator := urlutil.NewURLGenerator()
-
-	// Создание ядра приложения
-	core := usecases.NewCore(
-		urlRepo,
-		userRepo,
-		urlGenerator,
-		cfg.Auth,
-	)
-
-	// Пример использования ядра
-	ctx := context.Background()
-
-	// Использование URL use case
-	urlService := core.URLService()
-	shortURL, err := urlService.CreateShortURL(ctx, "https://example.com")
-	if err != nil {
-		log.Printf("Failed to create short URL: %v", err)
-	}
-	log.Printf("Created short URL: %s", shortURL)
-
-	// Использование Auth use case
-	authService := core.AuthService()
-	user, err := authService.Register(ctx)
-	if err != nil {
-		log.Printf("Failed to register user: %v", err)
-	}
-	log.Printf("Registered user: %s", user.ID)
-
-	// Graceful shutdown
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	<-sigChan
-
-	log.Println("Shutting down gracefully...")
-} 
+	logger.Info("Сервер успешно остановлен")
+}

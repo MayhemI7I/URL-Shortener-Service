@@ -30,7 +30,7 @@ func NewStorageSelector(cfg *config.Config) *StorageSelector {
 	return &StorageSelector{cfg: cfg}
 }
 
-// SelectURLStorage выбирает и инициализирует хранилище URL
+// SelectURLStorage выбирает и инициализирует хранилище URL наосновании переданной конфигурации при инициализации приложения
 func (s *StorageSelector) SelectURLStorage() (interfaces.URLRepository, error) {
 	switch s.getStorageType() {
 	case StorageTypePostgres:

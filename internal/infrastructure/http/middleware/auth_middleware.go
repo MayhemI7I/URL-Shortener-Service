@@ -8,16 +8,17 @@ import (
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/handlers/urlhandler"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/utils/httputil"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/utils/jwtutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/httputil"
+	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/jwtutil"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/auth"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/interfaces"
 	"go.uber.org/zap"
 )
 // Middleware authenticates requests using JWT tokens and attaches user ID to context
 // Auth is a middleware function that handles authentication.
 // It extracts the access token from the request, validates it, and sets the user ID in the request context.
 // If the access token is expired, it attempts to refresh it.
-func Auth(s storage.Storage) func(http.Handler) http.Handler {
+func Auth(s interfaces.AuthService) func(http.Handler) http.Handler {
    return func(next http.Handler) http.Handler {
    	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
    		// Extract the access token from the request.

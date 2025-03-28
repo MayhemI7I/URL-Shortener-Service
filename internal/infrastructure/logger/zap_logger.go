@@ -1,13 +1,16 @@
 package logger
 
 import (
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger/adapters"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
+	"go.uber.org/zap/zapcore"	
 	"os"
 )
 
 var Log *zap.SugaredLogger
 
+// InitLogger инициализирует базовый Zap логгер
 func InitLogger(logLevel string) {
 	// Устанавливаем уровень логирования
 	var level zapcore.Level
@@ -49,8 +52,39 @@ func InitLogger(logLevel string) {
 	Log = logger.Sugar()
 }
 
+// NewLogger создает новый логгер по умолчанию (ZAP)
+func NewLogger() interfaces.Logger {
+	if Log == nil {
+		InitLogger("info")
+	}
+	return adapters.NewZapAdapter(Log).AsLogger()
+}
+
+// NewCustomLogger создает новый логгер указанного типа
+func NewCustomLogger(loggerType string, customLogger interface{}) interfaces.Logger {
+	switch loggerType {
+	case "zap":
+		if Log == nil {
+			InitLogger("info")
+		}
+		return adapters.NewZapAdapter(Log).AsLogger()
+	case "stdout":
+		if adapter, ok := customLogger.(interfaces.LoggerAdapter); ok {
+			return adapter.AsLogger()
+		}
+		return adapters.NewStdoutAdapter("info").AsLogger()
+	default:
+		// По умолчанию используем ZAP
+		if Log == nil {
+			InitLogger("info")
+		}
+		return adapters.NewZapAdapter(Log).AsLogger()
+	}
+}
+
+// CloseLogger закрывает логгер
 func CloseLogger() {
 	if Log != nil {
-		_ = Log.Sync() // Закрываем логгер, записываем всё в файл
+		_ = Log.Sync()
 	}
 }

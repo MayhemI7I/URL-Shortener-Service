@@ -9,12 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/compression/zstd"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/config"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/http/middleware"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/usecases"
-	"github.com/MayhemI7I/URL-Shortener-Service/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/urlutil"
 	"go.uber.org/zap"
 )
@@ -25,11 +24,11 @@ func initApp() (*config.Config, *usecases.Core, error) {
 	cfg := config.InitConfig()
 
 	// Инициализируем логгер
-	logger.InitLogger(cfg.LogLevel)
+	logger := logger.NewLogger(cfg.LogLevel)
 
 	// Инициализация репозиториев через селектор
 	storageSelector := repository.NewStorageSelector(cfg)
-	urlRepo, err := storageSelector.Select()
+	urlRepo, err := storageSelector.SelectURLStorage()
 	if err != nil {
 		return nil, nil, err
 	}
