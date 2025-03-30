@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain"
+
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 )
@@ -35,7 +35,7 @@ func (s *Storage) AddUserURL(ctx context.Context, url *models.URLData) error {
 
 	// Проверяем, существует ли уже короткий URL
 	if _, exists := s.urls[url.ShortURL]; exists {
-		return domain.ErrURLExists
+		return models.ErrURLExists
 	}
 
 	// Сохраняем URL
@@ -60,7 +60,7 @@ func (s *Storage) FindByOriginalURL(ctx context.Context, originalURL string) (*m
 		}
 	}
 
-	return nil, domain.ErrURLNotFound
+	return nil, models.ErrURLNotFound
 }
 
 // FindByShortURL ищет оригинальный URL по короткой ссылке
@@ -76,7 +76,7 @@ func (s *Storage) FindByShortURL(ctx context.Context, shortURL string) (*models.
 
 	data, ok := s.urls[shortURL]
 	if !ok {
-		return nil, domain.ErrURLNotFound
+		return nil, models.ErrURLNotFound
 	}
 
 	return data, nil
@@ -116,7 +116,7 @@ func (s *Storage) MarkAsDeleted(ctx context.Context, shortURL string) error {
 
 	_, ok := s.urls[shortURL]
 	if !ok {
-		return domain.ErrURLNotFound
+		return models.ErrURLNotFound
 	}
 
 	// Помечаем URL как удаленный (в данной реализации просто удаляем)

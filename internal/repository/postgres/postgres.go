@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
@@ -101,7 +100,7 @@ func (pg *PostgresStorage) Get(ctx context.Context, shortURL string, userID stri
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			logger.Log.Debug("short URL not found", zap.String("short_url", shortURL), zap.String("user_id", userID))
-			return "", domain.ErrURLNotFound
+			return "", models.ErrURLNotFound
 		}
 		logger.Log.Error("failed to get original URL", zap.Error(err))
 		return "", err
@@ -142,7 +141,7 @@ func (pg *PostgresStorage) AddUserURL(ctx context.Context, url *models.URLData) 
 	}
 	rows, _ := result.RowsAffected()
 	if rows == 0 {
-		return domain.ErrURLExists // Если конфликт и ничего не обновлено
+		return models.ErrURLExists // Если конфликт и ничего не обновлено
 	}
 	logger.Log.Debug("short URL saved", zap.String("short_url", url.ShortURL), zap.String("user_id", url.User.ID))
 	return nil
@@ -155,7 +154,7 @@ func (pg *PostgresStorage) FindByOriginalURL(ctx context.Context, originalURL st
 	err := pg.db.GetContext(ctx, &data, query, originalURL)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, domain.ErrURLNotFound
+			return nil, models.ErrURLNotFound
 		}
 		logger.Log.Error("failed to find short URL by original URL", zap.String("original_url", originalURL), zap.Error(err))
 		return nil, err
@@ -170,7 +169,7 @@ func (pg *PostgresStorage) FindByShortURL(ctx context.Context, shortURL string) 
 	err := pg.db.GetContext(ctx, &data, query, shortURL)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, domain.ErrURLNotFound
+			return nil, models.ErrURLNotFound
 		}
 		logger.Log.Error("failed to find short URL by original URL", zap.String("original_url", data.OrigURL), zap.Error(err))
 		return nil, err
@@ -188,7 +187,7 @@ func (pg *PostgresStorage) MarkAsDeleted(ctx context.Context, shortURL string) e
 	}
 	rows, _ := result.RowsAffected()
 	if rows == 0 {
-		return domain.ErrURLNotFound
+		return models.ErrURLNotFound
 	}
 	logger.Log.Debug("URL marked as deleted", zap.String("short_url", shortURL))
 	return nil

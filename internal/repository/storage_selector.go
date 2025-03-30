@@ -8,6 +8,7 @@ import (
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/file"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/memory"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/postgres"
+
 )
 
 // StorageType определяет тип хранилища
@@ -21,12 +22,12 @@ const (
 
 // StorageSelector выбирает подходящее хранилище на основе конфигурации
 type StorageSelector struct {
-	cfg *config.Config
+	cfg *config.AppConfig
 	db  *postgres.DB
 }
 
 // NewStorageSelector создает новый селектор хранилища
-func NewStorageSelector(cfg *config.Config) *StorageSelector {
+func NewStorageSelector(cfg *config.AppConfig) *StorageSelector {
 	return &StorageSelector{cfg: cfg}
 }
 
@@ -35,7 +36,7 @@ func (s *StorageSelector) SelectURLStorage() (interfaces.URLRepository, error) {
 	switch s.getStorageType() {
 	case StorageTypePostgres:
 		if s.db == nil {
-			db, err := postgres.NewDB(s.cfg.DB.DSN)
+			db, err := postgres.NewDB(s.cfg.DBConfig.GetDSN())
 			if err != nil {
 				return nil, err
 			}
@@ -43,7 +44,7 @@ func (s *StorageSelector) SelectURLStorage() (interfaces.URLRepository, error) {
 		}
 		return postgres.NewPostgresURLStorage(s.db), nil
 	case StorageTypeFile:
-		return file.NewFileStorage(s.cfg.FileStorage.Path)
+		return file.NewFileStorage(s.cfg.FileStorageConfig.GetPath())
 	case StorageTypeMemory:
 		return memory.NewMemoryStorage()
 	default:
@@ -56,13 +57,13 @@ func (s *StorageSelector) SelectUserStorage() (interfaces.UserRepository, error)
 	switch s.getStorageType() {
 	case StorageTypePostgres:
 		if s.db == nil {
-			db, err := postgres.NewDB(s.cfg.DB.DSN)
+			db, err := postgres.NewDB(s.cfg.DBConfig.GetDSN())
 			if err != nil {
 				return nil, err
 			}
 			s.db = db
 		}
-		return postgres.NewPostgresUserStorage(s.db, s.cfg.JWT), nil
+		return postgres.NewPostgresUserStorage(s.db, s.cfg.JWTConfig), nil
 	default:
 		return nil, errors.New("user storage is only supported with PostgreSQL")
 	}
@@ -78,10 +79,10 @@ func (s *StorageSelector) Close() error {
 
 // getStorageType определяет тип хранилища на основе конфигурации
 func (s *StorageSelector) getStorageType() StorageType {
-	if s.cfg.DB.Driver != "" {
+	if s.cfg.DBConfig.GetDriver() != "" {
 		return StorageTypePostgres
 	}
-	if s.cfg.FileStorage.Path != "" {
+	if s.cfg.FileStorageConfig.GetPath() != "" {
 		return StorageTypeFile
 	}
 	return StorageTypeMemory

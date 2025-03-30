@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"fmt"
 	"log"
@@ -16,7 +17,7 @@ type StdoutLoggerAdapter struct {
 }
 
 // NewStdoutAdapter - создает новый адаптер для вывода в stdout
-func NewStdoutAdapter(level string) interfaces.LoggerAdapter {
+func NewStdoutAdapter(level string) logger.LoggerAdapter {
 	return &StdoutLoggerAdapter{
 		logger: log.New(os.Stdout, "", 0),
 		level:  strings.ToUpper(level),

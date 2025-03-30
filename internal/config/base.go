@@ -6,10 +6,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain"
 	"github.com/spf13/pflag"
 )
 
-// Configurable интерфейс для конфигураций 
+// Configurable интерфейс для конфигураций
 type Configurable interface {
 	AddFlags()
 	LoadFromEnv()
@@ -17,17 +18,19 @@ type Configurable interface {
 	GetDefaultConfig() interface{}
 }
 
-// BaseConfig базовый класс для конфигураций
+// BaseConfig - базовая структура для всех конфигураций в системе
 type BaseConfig struct {
-	name  string
-	flags *pflag.FlagSet
+	name  string           // Имя конфигурации (для идентификации)
+	flags *pflag.FlagSet   // Набор флагов командной строки
 }
 
-// NewBaseConfig создает новую базовую конфигурацию
+// NewBaseConfig создает базовую конфигурацию
+// Используется как основа для других конфигураций (DB, Cache, API и т.д.)
+// name - уникальное имя конфигурации для логов и идентификации
 func NewBaseConfig(name string) BaseConfig {
 	return BaseConfig{
 		name:  name,
-		flags: pflag.NewFlagSet(name, pflag.ExitOnError),
+		flags: pflag.NewFlagSet(name, pflag.ExitOnError), // Создаём флаги для командной строки
 	}
 }
 
@@ -51,7 +54,7 @@ func (c *BaseConfig) AddBoolFlag(flags *pflag.FlagSet, name string, value bool, 
 	flags.BoolVarP(&value, name, "", value, usage)
 }
 
-// ValidateRequired проверяет обязательные поля
+// ValidateRequired проверяет обязательные поля на пустоту
 func (c *BaseConfig) ValidateRequired(fields map[string]interface{}) error {
 	for name, value := range fields {
 		switch v := value.(type) {
@@ -122,3 +125,7 @@ func (c *BaseConfig) GetFlags() *pflag.FlagSet {
 func (c *BaseConfig) PrintHelp() {
 	c.flags.PrintDefaults()
 }
+
+// BaseConfig реализует все необходимые интерфейсы из domain
+var _ domain.FlagProvider = (*BaseConfig)(nil)
+var _ domain.ValidationProvider = (*BaseConfig)(nil)

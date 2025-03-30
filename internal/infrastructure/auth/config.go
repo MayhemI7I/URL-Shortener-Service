@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
 	"github.com/spf13/pflag"
 )
 
 // JWTConfig конфигурация для JWT
 type JWTConfig struct {
-	config.BaseConfig
+	name                   string
+	flags                  *pflag.FlagSet
 	Secret                 string
 	AccessTokenExpiration  time.Duration
 	RefreshTokenExpiration time.Duration
@@ -19,8 +20,9 @@ type JWTConfig struct {
 // NewJWTConfig создает новую конфигурацию JWT
 func NewJWTConfig() *JWTConfig {
 	return &JWTConfig{
-		BaseConfig:            config.NewBaseConfig("JWT"),
-		Secret:                "secret",
+		name:                   "JWT",
+		flags:                  pflag.NewFlagSet("JWT", pflag.ExitOnError),
+		Secret:                 "secret",
 		AccessTokenExpiration:  24 * time.Hour,
 		RefreshTokenExpiration: 720 * time.Hour, // 30 days
 	}
@@ -28,32 +30,29 @@ func NewJWTConfig() *JWTConfig {
 
 // AddFlags добавляет флаги для конфигурации JWT
 func (c *JWTConfig) AddFlags() {
-	c.AddStringFlag(c.GetFlags(), "secret", c.Secret, "JWT secret")
-	c.AddDurationFlag(c.GetFlags(), "token-expiration", c.AccessTokenExpiration, "JWT token expiration")
-	c.AddDurationFlag(c.GetFlags(), "refresh-expiration", c.RefreshTokenExpiration, "JWT refresh token expiration")
+	c.flags.StringVarP(&c.Secret, "jwt-secret", "", c.Secret, "JWT secret key")
+	c.flags.DurationVarP(&c.AccessTokenExpiration, "jwt-token-expiration", "", c.AccessTokenExpiration, "JWT token expiration")
+	c.flags.DurationVarP(&c.RefreshTokenExpiration, "jwt-refresh-expiration", "", c.RefreshTokenExpiration, "JWT refresh token expiration")
 }
 
 // LoadFromEnv загружает конфигурацию из переменных окружения
 func (c *JWTConfig) LoadFromEnv() {
-	// Базовая реализация уже обрабатывает переменные окружения
-	// через методы Add*Flag
+	// Здесь можно добавить логику загрузки из env переменных
 }
 
 // Validate проверяет корректность конфигурации
 func (c *JWTConfig) Validate() error {
 	// Проверяем обязательные поля
-	if err := c.ValidateRequired(map[string]interface{}{
-		"secret": c.Secret,
-	}); err != nil {
-		return err
+	if c.Secret == "" {
+		return fmt.Errorf("поле jwt-secret не может быть пустым")
 	}
 
 	// Проверяем длительности
-	if err := c.ValidateDuration(map[string]time.Duration{
-		"token-expiration":   c.AccessTokenExpiration,
-		"refresh-expiration": c.RefreshTokenExpiration,
-	}); err != nil {
-		return err
+	if c.AccessTokenExpiration <= 0 {
+		return fmt.Errorf("поле jwt-token-expiration должно быть положительным числом")
+	}
+	if c.RefreshTokenExpiration <= 0 {
+		return fmt.Errorf("поле jwt-refresh-expiration должно быть положительным числом")
 	}
 
 	// Проверяем логические ограничения
@@ -64,12 +63,22 @@ func (c *JWTConfig) Validate() error {
 	return nil
 }
 
-// GetDefaultConfig возвращает конфигурацию по умолчанию
-func (c *JWTConfig) GetDefaultConfig() interface{} {
-	return NewJWTConfig()
+// GetFlags возвращает набор флагов
+func (c *JWTConfig) GetFlags() *pflag.FlagSet {
+	return c.flags
 }
 
-// GetJWTSecret возвращает секретный ключ JWT
+// GetSecretKey возвращает секретный ключ JWT
+func (c *JWTConfig) GetSecretKey() string {
+	return c.Secret
+}
+
+// GetTokenExpiration возвращает время жизни токена в секундах
+func (c *JWTConfig) GetTokenExpiration() int {
+	return int(c.AccessTokenExpiration.Seconds())
+}
+
+// GetJWTSecret возвращает секретный ключ JWT (алиас для поддержки старого интерфейса)
 func (c *JWTConfig) GetJWTSecret() string {
 	return c.Secret
 }
@@ -83,3 +92,7 @@ func (c *JWTConfig) GetAccessTokenExpiration() time.Duration {
 func (c *JWTConfig) GetRefreshTokenExpiration() time.Duration {
 	return c.RefreshTokenExpiration
 }
+
+// Проверка соответствия интерфейсу
+var _ config.JWTConfigProvider = (*JWTConfig)(nil)
+var _ config.Configurable = (*JWTConfig)(nil)

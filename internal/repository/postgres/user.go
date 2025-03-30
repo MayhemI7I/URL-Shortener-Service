@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/jwtutil"
@@ -17,11 +17,11 @@ import (
 
 type PostgresUserStorage struct {
 	db  *DB
-	cfg interfaces.AuthConfig
+	cfg config.JWTConfigProvider
 }
 
 // NewPostgresUserStorage создаёт новое хранилище пользователей
-func NewPostgresUserStorage(db *DB, cfg interfaces.AuthConfig) interfaces.UserRepository {
+func NewPostgresUserStorage(db *DB, cfg config.JWTConfigProvider) interfaces.UserRepository {
 	return &PostgresUserStorage{db: db, cfg: cfg}
 }
 
@@ -32,7 +32,7 @@ func (pg *PostgresUserStorage) GetUserById(ctx context.Context, userID string) (
 	err := pg.db.GetContext(ctx, &user.ID, query, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, domain.ErrUserNotFound
+			return nil, models.ErrUserNotFound
 		}
 		logger.Log.Error("failed to get user by ID", zap.String("user_id", userID), zap.Error(err))
 		return nil, err
@@ -47,7 +47,7 @@ func (pg *PostgresUserStorage) GetUserByRefreshToken(ctx context.Context, refres
 	err := pg.db.GetContext(ctx, &user.ID, query, refreshToken)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, domain.ErrTokenNotFound
+			return nil, models.ErrTokenNotFound
 		}
 		logger.Log.Error("failed to get user by refresh token", zap.String("refresh_token", refreshToken), zap.Error(err))
 		return nil, err
@@ -67,7 +67,7 @@ func (pg *PostgresUserStorage) GetNewAccessToken(ctx context.Context, refreshTok
 	err := pg.db.QueryRowContext(ctx, query, refreshToken).Scan(&userID, &expiresAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return "", "", domain.ErrTokenNotFound
+			return "", "", models.ErrTokenNotFound
 		}
 		logger.Log.Error("ошибка при запросе refresh-токена из базы", zap.Error(err))
 		return "", "", err
@@ -96,7 +96,7 @@ func (pg *PostgresUserStorage) GetNewAccessToken(ctx context.Context, refreshTok
 		}
 	}
 
-	accessToken, err := jwtutil.GenerateAccessToken(userID, pg.cfg.GetJWTSecret())
+	accessToken, err := jwtutil.GenerateAccessToken(userID, pg.cfg.GetSecretKey())
 	if err != nil {
 		return "", "", err
 	}
@@ -131,7 +131,7 @@ func (pg *PostgresUserStorage) DeleteRefreshToken(ctx context.Context, refreshTo
 	}
 	rows, _ := result.RowsAffected()
 	if rows == 0 {
-		return domain.ErrTokenNotFound
+		return models.ErrTokenNotFound
 	}
 	logger.Log.Debug("refresh token deleted", zap.String("refresh_token", refreshToken))
 	return nil

@@ -3,60 +3,51 @@ package config
 import (
 	"fmt"
 	"os"
-	"strconv"
-	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/auth"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/database"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
 	"github.com/spf13/pflag"
 )
 
 // AppConfig основная конфигурация приложения
 type AppConfig struct {
-	// Основные настройки приложения
-	ServerAddr      string
-	ServerPort      int
-	BaseURL         string
-	ShutdownTimeout time.Duration
-
 	// Конфигурации компонентов
-	Logger *logger.LoggerConfig
-	DB     *database.DBConfig
-	JWT    *auth.JWTConfig
-	HTTP   *http.HTTPConfig
+	HTTPConfig config.HTTPConfigProvider
+	LoggerConfig config.LoggerConfigProvider
+	DBConfig config.DBConfigProvider
+	FileStorageConfig config.FileStorageConfigProvider
+	JWTConfig config.JWTConfigProvider
+
 
 	// Флаги командной строки
 	flags *pflag.FlagSet
 }
 
-// NewAppConfig создает новую конфигурацию приложения
-func NewAppConfig() *AppConfig {
+// Создаем функцию-фабрику, которая примет конкретные реализации извне
+func NewAppConfig(
+	httpConfig config.HTTPConfigProvider,
+	loggerConfig config.LoggerConfigProvider,
+	dbConfig config.DBConfigProvider,
+	fileStorageConfig config.FileStorageConfigProvider,
+	jwtConfig config.JWTConfigProvider,
+) *AppConfig {
 	return &AppConfig{
-		ServerAddr:      "localhost",
-		ServerPort:      8080,
-		BaseURL:         "http://localhost:8080",
-		ShutdownTimeout: 10 * time.Second,
-		Logger:          logger.NewLoggerConfig(),
-		DB:              database.NewDBConfig(),
-		JWT:             auth.NewJWTConfig(),
-		flags:           pflag.NewFlagSet("app", pflag.ExitOnError),
+		HTTPConfig: httpConfig,
+		LoggerConfig: loggerConfig,
+		DBConfig: dbConfig,
+		FileStorageConfig: fileStorageConfig,
+		JWTConfig: jwtConfig,
+		flags: pflag.NewFlagSet("app", pflag.ExitOnError),
 	}
 }
 
 // AddFlags добавляет все флаги командной строки
 func (c *AppConfig) AddFlags() {
-	// Основные флаги приложения
-	c.flags.StringVarP(&c.ServerAddr, "addr", "a", c.ServerAddr, "Адрес сервера")
-	c.flags.IntVarP(&c.ServerPort, "port", "p", c.ServerPort, "Порт сервера")
-	c.flags.StringVarP(&c.BaseURL, "base-url", "b", c.BaseURL, "Базовый URL сервиса")
-	c.flags.DurationVarP(&c.ShutdownTimeout, "shutdown-timeout", "t", c.ShutdownTimeout, "Таймаут для graceful shutdown")
-
 	// Флаги компонентов
-	c.Logger.AddFlags()
-	c.DB.AddFlags()
-	c.JWT.AddFlags()
-	c.HTTP.AddFlags()
+	c.HTTPConfig.AddFlags()
+	c.LoggerConfig.AddFlags()
+	c.DBConfig.AddFlags()
+	c.JWTConfig.AddFlags()
+	c.FileStorageConfig.AddFlags()
 }
 
 // ParseFlags парсит флаги командной строки
@@ -66,70 +57,45 @@ func (c *AppConfig) ParseFlags() error {
 
 // LoadFromEnv загружает конфигурацию из переменных окружения
 func (c *AppConfig) LoadFromEnv() {
-	// Загрузка основных настроек
-	if addr := os.Getenv("SERVER_ADDR"); addr != "" {
-		c.ServerAddr = addr
-	}
-	if port := os.Getenv("SERVER_PORT"); port != "" {
-		if p, err := strconv.Atoi(port); err == nil {
-			c.ServerPort = p
-		}
-	}
-	if baseURL := os.Getenv("BASE_URL"); baseURL != "" {
-		c.BaseURL = baseURL
-	}
-	if timeout := os.Getenv("SHUTDOWN_TIMEOUT"); timeout != "" {
-		if t, err := time.ParseDuration(timeout); err == nil {
-			c.ShutdownTimeout = t
-		}
-	}
-
-	// Загрузка конфигураций компонентов
-	c.Logger.LoadFromEnv()
-	c.DB.LoadFromEnv()
-	c.JWT.LoadFromEnv()
-	c.HTTP.LoadFromEnv()
+	c.HTTPConfig.LoadFromEnv()
+	c.LoggerConfig.LoadFromEnv()
+	c.DBConfig.LoadFromEnv()
+	c.JWTConfig.LoadFromEnv()
+	c.FileStorageConfig.LoadFromEnv()
 }
 
 // Validate проверяет корректность всей конфигурации
 func (c *AppConfig) Validate() error {
-	// Проверка основных настроек
-	if c.ServerAddr == "" {
-		return fmt.Errorf("адрес сервера не может быть пустым")
-	}
-	if c.ServerPort <= 0 {
-		return fmt.Errorf("порт сервера должен быть положительным числом")
-	}
-	if c.BaseURL == "" {
-		return fmt.Errorf("базовый URL не может быть пустым")
-	}
-	if c.ShutdownTimeout <= 0 {
-		return fmt.Errorf("таймаут shutdown должен быть положительной длительностью")
-	}
-
 	// Проверка конфигураций компонентов
-	if err := c.Logger.Validate(); err != nil {
-		return fmt.Errorf("ошибка конфигурации логгера: %w", err)
-	}
-	if err := c.DB.Validate(); err != nil {
-		return fmt.Errorf("ошибка конфигурации базы данных: %w", err)
-	}
-	if err := c.JWT.Validate(); err != nil {
-		return fmt.Errorf("ошибка конфигурации JWT: %w", err)
-	}
-	if err := c.HTTP.Validate(); err != nil {
+	if err := c.HTTPConfig.Validate(); err != nil {
 		return fmt.Errorf("ошибка конфигурации HTTP: %w", err)
 	}
+	if err := c.LoggerConfig.Validate(); err != nil {
+		return fmt.Errorf("ошибка конфигурации логгера: %w", err)
+	}
+	if err := c.DBConfig.Validate(); err != nil {
+		return fmt.Errorf("ошибка конфигурации базы данных: %w", err)
+	}
+	if err := c.JWTConfig.Validate(); err != nil {
+		return fmt.Errorf("ошибка конфигурации JWT: %w", err)
+	}
+	if err := c.FileStorageConfig.Validate(); err != nil {
+		return fmt.Errorf("ошибка конфигурации файлового хранилища: %w", err)
+	}
+			
 
 	return nil
 }
 
 // GetServerAddr возвращает полный адрес сервера
 func (c *AppConfig) GetServerAddr() string {
-	return fmt.Sprintf("%s:%d", c.ServerAddr, c.ServerPort)
+	return fmt.Sprintf("%s:%s", c.HTTPConfig.GetAddress(), c.HTTPConfig.GetPort())
 }
 
 // PrintHelp выводит справку по использованию флагов
 func (c *AppConfig) PrintHelp() {
 	c.flags.PrintDefaults()
 }
+
+// Проверка соответствия интерфейсу
+var _ config.ConfigContainer = (*AppConfig)(nil)

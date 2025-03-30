@@ -2,6 +2,8 @@ package usecases
 
 import (
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/services"
 )
 
@@ -15,7 +17,7 @@ type Core struct {
 	// Use Cases
 	urlUseCase  *URLUseCase
 	authUseCase *AuthUseCase
-	authConfig  interfaces.AuthConfig
+	authConfig  config.AuthConfig
 
 	// Утилиты
 	urlGenerator interfaces.URLGenerator
@@ -26,7 +28,7 @@ func NewCore(
 	urlRepo interfaces.URLRepository,
 	userRepo interfaces.UserRepository,
 	urlGenerator interfaces.URLGenerator,
-	authConfig interfaces.AuthConfig,
+	authConfig config.AuthConfig,
 ) *Core {
 	core := &Core{
 		urlRepo:      urlRepo,

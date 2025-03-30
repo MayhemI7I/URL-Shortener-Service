@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/google/uuid"
@@ -14,11 +15,11 @@ import (
 // AuthService реализует интерфейс interfaces.AuthService
 type AuthService struct {
 	repo interfaces.UserRepository
-	cfg  interfaces.AuthConfig
+	cfg  config.JWTConfigProvider
 }
 
 // NewAuthService создает новый экземпляр AuthService
-func NewAuthService(repo interfaces.UserRepository, cfg interfaces.AuthConfig) interfaces.AuthService {
+func NewAuthService(repo interfaces.UserRepository, cfg config.JWTConfigProvider) interfaces.AuthService {
 	return &AuthService{
 		repo: repo,
 		cfg:  cfg,

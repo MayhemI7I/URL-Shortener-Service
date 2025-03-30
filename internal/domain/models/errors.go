@@ -1,17 +1,32 @@
 package models
 
-import(
-	"errors"
-
-)
+import "errors"
 
 var (
-    ErrInvalidURL      = errors.New("invalid URL format")//ошибка неверного формата URL
-	ErrUserNotFound    = errors.New("user not found")//ошибка неверного пользователя
-	ErrTokenNotFound   = errors.New("refresh token not found")//ошибка неверного токена
-	ErrTokenExpired    = errors.New("refresh token expired")//ошибка просроченного токена
-	ErrURLNotFound = errors.New("URL not found")//ошибка неверного URL
-	ErrURLExists = errors.New("URL already exists")//ошибка существующего URL
-	ErrURLDeleted = errors.New("URL deleted")//ошибка URL удлен
+	// ErrURLNotFound возвращается, когда URL не найден
+	ErrURLNotFound = errors.New("URL not found")
+
+	// ErrURLExists возвращается, когда URL уже существует
+	ErrURLExists = errors.New("URL already exists")
+
+	// ErrTokenNotFound возвращается, когда токен не найден
+	ErrTokenNotFound = errors.New("token not found")
+
+	// ErrInvalidToken возвращается, когда токен недействителен
+	ErrInvalidToken = errors.New("invalid token")
+
+	// ErrTokenExpired возвращается, когда токен истек
+	ErrTokenExpired = errors.New("token expired")
+
+	// ErrUserNotFound возвращается, когда пользователь не найден
+	ErrUserNotFound = errors.New("user not found")
+
+	// ErrURLDeleted возвращается, когда URL удален
+	ErrURLDeleted = errors.New("URL deleted")
+
+
+	// ErrInvalidURLFormat возвращается, когда URL недействителен
+	ErrInvalidURLFormat = errors.New("invalid URL format")
+	
 	
 )
