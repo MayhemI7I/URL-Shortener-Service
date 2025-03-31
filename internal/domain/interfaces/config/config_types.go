@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 // Configurable интерфейс для всех конфигураций
 type Configurable interface {
 	AddFlags()
@@ -52,6 +54,7 @@ type LoggerConfigProvider interface {
 // JWTConfigProvider интерфейс для JWT конфигурации
 type JWTConfigProvider interface {
 	Configurable
-	GetSecretKey() string // секретный ключ для JWT токенов
-	GetTokenExpiration() int // время жизни токена в секундах
-} 
+	GetSecretKey() string    // секретный ключ для JWT токенов
+	GetAccessTokenExpiration() time.Duration // время жизни access-токена в секундах
+	GetRefreshTokenExpiration() time.Duration // время жизни refresh-токена в секундах
+}

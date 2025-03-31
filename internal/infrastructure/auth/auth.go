@@ -18,7 +18,7 @@ import (
 // HandleTokenRefresh handles the token refresh process.
 // It extracts the refresh token from the request, gets a new access token from the storage,
 // and sets the new access token and refresh token as cookies in the response.
-func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s config.AuthConfig) (string, error) {
+func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s config.JWTConfigProvider) (string, error) {
 	// Extract the refresh token from the request.
 	refreshToken, err := httputil.ExtractCookie(r, httputil.RefreshTokenCookie)
 	if err != nil && err != http.ErrNoCookie {
@@ -32,7 +32,7 @@ func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s config.AuthCon
 	defer cancel()
 
 	// Get a new access token from the storage.
-	newAccessToken, refreshToken, err := s.GetNewAccessToken(ctx, refreshToken)
+	newAccessToken, refreshToken, err := s.Get(ctx, refreshToken)
 	if err != nil {
 		// Return the error if there was a problem getting the new access token.
 		return "", err

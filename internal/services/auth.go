@@ -42,7 +42,7 @@ func (s *AuthService) Register(ctx context.Context) (*models.User,error) {
 	refreshToken := &models.RefreshToken{}
 	refreshToken.ID = id
 	refreshToken.Token = refreshTokenStr
-	refreshToken.ExpiresAt = time.Now().Add(s.cfg.GetRefreshTokenExpiration())
+	refreshToken.ExpiresAt = time.Now().Add(s.cfg.RefreshTokenExpiration())
 	return user,s.repo.SaveRefreshToken(ctx, refreshToken)
 }
 

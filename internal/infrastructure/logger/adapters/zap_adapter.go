@@ -6,56 +6,44 @@ import (
 	"go.uber.org/zap"
 )
 
-// ZapLoggerAdapter - адаптер для Zap логгера
-type ZapLoggerAdapter struct {
+// ZapLogger - реализация логгера на основе Zap
+type ZapLogger struct {
 	logger *zap.SugaredLogger
 }
 
-// NewZapAdapter - создает новый адаптер для Zap логгера
-func NewZapAdapter(zapLogger *zap.SugaredLogger) interfaces.LoggerAdapter {
-	return &ZapLoggerAdapter{
+// NewZapLogger - создает новый логгер на основе Zap
+func NewZapLogger(zapLogger *zap.SugaredLogger) interfaces.Logger {
+	return &ZapLogger{
 		logger: zapLogger,
 	}
 }
 
-// AsLogger - реализует интерфейс LoggerAdapter
-func (z *ZapLoggerAdapter) AsLogger() interfaces.Logger {
-	return &zapLoggerImpl{
-		logger: z.logger,
-	}
-}
-
-// zapLoggerImpl - реализация интерфейса Logger для Zap
-type zapLoggerImpl struct {
-	logger *zap.SugaredLogger
-}
-
 // Debug - реализует метод интерфейса Logger
-func (z *zapLoggerImpl) Debug(msg string, fields ...interfaces.Field) {
+func (z *ZapLogger) Debug(msg string, fields ...interfaces.Field) {
 	args := convertFields(fields)
 	z.logger.Debugw(msg, args...)
 }
 
 // Info - реализует метод интерфейса Logger
-func (z *zapLoggerImpl) Info(msg string, fields ...interfaces.Field) {
+func (z *ZapLogger) Info(msg string, fields ...interfaces.Field) {
 	args := convertFields(fields)
 	z.logger.Infow(msg, args...)
 }
 
 // Warn - реализует метод интерфейса Logger
-func (z *zapLoggerImpl) Warn(msg string, fields ...interfaces.Field) {
+func (z *ZapLogger) Warn(msg string, fields ...interfaces.Field) {
 	args := convertFields(fields)
 	z.logger.Warnw(msg, args...)
 }
 
 // Error - реализует метод интерфейса Logger
-func (z *zapLoggerImpl) Error(msg string, fields ...interfaces.Field) {
+func (z *ZapLogger) Error(msg string, fields ...interfaces.Field) {
 	args := convertFields(fields)
 	z.logger.Errorw(msg, args...)
 }
 
 // Fatal - реализует метод интерфейса Logger
-func (z *zapLoggerImpl) Fatal(msg string, fields ...interfaces.Field) {
+func (z *ZapLogger) Fatal(msg string, fields ...interfaces.Field) {
 	args := convertFields(fields)
 	z.logger.Fatalw(msg, args...)
 }

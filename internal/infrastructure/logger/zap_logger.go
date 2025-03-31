@@ -1,11 +1,12 @@
 package logger
 
 import (
+	"os"
+
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger/adapters"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"	
-	"os"
+	"go.uber.org/zap/zapcore"
 )
 
 var Log *zap.SugaredLogger
@@ -57,7 +58,7 @@ func NewLogger() interfaces.Logger {
 	if Log == nil {
 		InitLogger("info")
 	}
-	return adapters.NewZapAdapter(Log).AsLogger()
+	return adapters.NewZapLogger(Log)
 }
 
 // NewCustomLogger создает новый логгер указанного типа
@@ -67,18 +68,15 @@ func NewCustomLogger(loggerType string, customLogger interface{}) interfaces.Log
 		if Log == nil {
 			InitLogger("info")
 		}
-		return adapters.NewZapAdapter(Log).AsLogger()
+		return adapters.NewZapLogger(Log)
 	case "stdout":
-		if adapter, ok := customLogger.(interfaces.LoggerAdapter); ok {
-			return adapter.AsLogger()
-		}
-		return adapters.NewStdoutAdapter("info").AsLogger()
+		return adapters.NewStdoutLogger("info")
 	default:
 		// По умолчанию используем ZAP
 		if Log == nil {
 			InitLogger("info")
 		}
-		return adapters.NewZapAdapter(Log).AsLogger()
+		return adapters.NewZapLogger(Log)
 	}
 }
 

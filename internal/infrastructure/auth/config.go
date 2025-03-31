@@ -73,10 +73,6 @@ func (c *JWTConfig) GetSecretKey() string {
 	return c.Secret
 }
 
-// GetTokenExpiration возвращает время жизни токена в секундах
-func (c *JWTConfig) GetTokenExpiration() int {
-	return int(c.AccessTokenExpiration.Seconds())
-}
 
 // GetJWTSecret возвращает секретный ключ JWT (алиас для поддержки старого интерфейса)
 func (c *JWTConfig) GetJWTSecret() string {

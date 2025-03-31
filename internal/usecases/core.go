@@ -17,7 +17,7 @@ type Core struct {
 	// Use Cases
 	urlUseCase  *URLUseCase
 	authUseCase *AuthUseCase
-	authConfig  config.AuthConfig
+	authConfig  config.JWTConfigProvider
 
 	// Утилиты
 	urlGenerator interfaces.URLGenerator
@@ -28,7 +28,7 @@ func NewCore(
 	urlRepo interfaces.URLRepository,
 	userRepo interfaces.UserRepository,
 	urlGenerator interfaces.URLGenerator,
-	authConfig config.AuthConfig,
+	authConfig config.JWTConfigProvider,
 ) *Core {
 	core := &Core{
 		urlRepo:      urlRepo,

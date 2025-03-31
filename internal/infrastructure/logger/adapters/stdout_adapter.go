@@ -1,45 +1,31 @@
 package adapters
 
 import (
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 )
 
-// StdoutLoggerAdapter - простой адаптер логгера с выводом в stdout
-type StdoutLoggerAdapter struct {
+// StdoutLogger - реализация логгера с выводом в stdout
+type StdoutLogger struct {
 	logger *log.Logger
 	level  string
 }
 
-// NewStdoutAdapter - создает новый адаптер для вывода в stdout
-func NewStdoutAdapter(level string) logger.LoggerAdapter {
-	return &StdoutLoggerAdapter{
+// NewStdoutLogger - создает новый логгер для вывода в stdout
+func NewStdoutLogger(level string) interfaces.Logger {
+	return &StdoutLogger{
 		logger: log.New(os.Stdout, "", 0),
 		level:  strings.ToUpper(level),
 	}
 }
 
-// AsLogger - реализует интерфейс LoggerAdapter
-func (s *StdoutLoggerAdapter) AsLogger() interfaces.Logger {
-	return &stdoutLoggerImpl{
-		logger: s.logger,
-		level:  s.level,
-	}
-}
-
-// stdoutLoggerImpl - реализация интерфейса Logger для stdout
-type stdoutLoggerImpl struct {
-	logger *log.Logger
-	level  string
-}
-
 // Debug - реализует метод интерфейса Logger
-func (s *stdoutLoggerImpl) Debug(msg string, fields ...interfaces.Field) {
+func (s *StdoutLogger) Debug(msg string, fields ...interfaces.Field) {
 	if s.level != "DEBUG" && s.level != "TRACE" {
 		return
 	}
@@ -47,7 +33,7 @@ func (s *stdoutLoggerImpl) Debug(msg string, fields ...interfaces.Field) {
 }
 
 // Info - реализует метод интерфейса Logger
-func (s *stdoutLoggerImpl) Info(msg string, fields ...interfaces.Field) {
+func (s *StdoutLogger) Info(msg string, fields ...interfaces.Field) {
 	if s.level == "WARN" || s.level == "ERROR" || s.level == "FATAL" {
 		return
 	}
@@ -55,7 +41,7 @@ func (s *stdoutLoggerImpl) Info(msg string, fields ...interfaces.Field) {
 }
 
 // Warn - реализует метод интерфейса Logger
-func (s *stdoutLoggerImpl) Warn(msg string, fields ...interfaces.Field) {
+func (s *StdoutLogger) Warn(msg string, fields ...interfaces.Field) {
 	if s.level == "ERROR" || s.level == "FATAL" {
 		return
 	}
@@ -63,7 +49,7 @@ func (s *stdoutLoggerImpl) Warn(msg string, fields ...interfaces.Field) {
 }
 
 // Error - реализует метод интерфейса Logger
-func (s *stdoutLoggerImpl) Error(msg string, fields ...interfaces.Field) {
+func (s *StdoutLogger) Error(msg string, fields ...interfaces.Field) {
 	if s.level == "FATAL" {
 		return
 	}
@@ -71,13 +57,13 @@ func (s *stdoutLoggerImpl) Error(msg string, fields ...interfaces.Field) {
 }
 
 // Fatal - реализует метод интерфейса Logger
-func (s *stdoutLoggerImpl) Fatal(msg string, fields ...interfaces.Field) {
+func (s *StdoutLogger) Fatal(msg string, fields ...interfaces.Field) {
 	s.log("FATAL", msg, fields...)
 	os.Exit(1)
 }
 
 // log - форматирует и выводит лог
-func (s *stdoutLoggerImpl) log(level string, msg string, fields ...interfaces.Field) {
+func (s *StdoutLogger) log(level string, msg string, fields ...interfaces.Field) {
 	// Форматируем текущее время
 	now := time.Now().Format("2006-01-02 15:04:05.000")
 

@@ -3,13 +3,14 @@ package logger
 import (
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger/adapters"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
 	"go.uber.org/zap"
 )
 
 var Log *zap.SugaredLogger
 
 // InitLogger инициализирует базовый Zap логгер с ротацией логов
-func InitLogger(config LoggerConfig) {
+func InitLogger(config config.LoggerConfigProvider) {
 	adapter := adapters.NewZapAdapter(adapters.ZapLoggerConfig{
 		LogPath:    config.LogPath,
 		MaxSize:    config.MaxSize,
