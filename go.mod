@@ -27,5 +27,6 @@ require (
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.8.0 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

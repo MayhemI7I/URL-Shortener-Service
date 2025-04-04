@@ -1,6 +1,8 @@
-package config
+package infrastructure
 
-import "time"
+import (
+	"time"
+)
 
 // Configurable интерфейс для всех конфигураций
 type Configurable interface {
@@ -44,17 +46,35 @@ type FileStorageConfigProvider interface {
 	GetPath() string
 }
 
-// LoggerConfigProvider интерфейс для конфигурации логгера
+// LoggerConfigProvider определяет интерфейс для конфигурации логгера
 type LoggerConfigProvider interface {
 	Configurable
+	// GetLevel возвращает уровень логирования
 	GetLevel() string
+
+	// GetOutput возвращает тип вывода логов (file, console, both)
 	GetOutput() string
+
+	// GetLogPath возвращает путь к файлу логов
+	GetLogPath() string
+
+	// GetMaxSize возвращает максимальный размер файла логов в МБ
+	GetMaxSize() int
+
+	// GetMaxBackups возвращает максимальное количество резервных копий
+	GetMaxBackups() int
+
+	// GetMaxAge возвращает максимальный возраст файла логов в днях
+	GetMaxAge() int
+
+	// GetCompress возвращает флаг сжатия старых логов
+	GetCompress() bool
 }
 
 // JWTConfigProvider интерфейс для JWT конфигурации
 type JWTConfigProvider interface {
 	Configurable
-	GetSecretKey() string    // секретный ключ для JWT токенов
-	GetAccessTokenExpiration() time.Duration // время жизни access-токена в секундах
+	GetSecretKey() string                     // секретный ключ для JWT токенов
+	GetAccessTokenExpiration() time.Duration  // время жизни access-токена в секундах
 	GetRefreshTokenExpiration() time.Duration // время жизни refresh-токена в секундах
 }

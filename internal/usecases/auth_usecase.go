@@ -3,18 +3,18 @@ package usecases
 import (
 	"context"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/service"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 )
 
 // AuthUseCase реализует интерфейс AuthService
 type AuthUseCase struct {
-	service interfaces.AuthService
+	service service.AuthService
 }
 
 
 // NewAuthUseCase создает новый экземпляр сервиса аутентификации
-func NewAuthUseCase(service interfaces.AuthService) *AuthUseCase {
+func NewAuthUseCase(service service.AuthService) *AuthUseCase {
 		return &AuthUseCase{service: service}
 	}
 

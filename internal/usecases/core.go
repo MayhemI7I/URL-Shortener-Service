@@ -1,8 +1,8 @@
 package usecases
 
 import (
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/services"
 )
@@ -11,24 +11,24 @@ import (
 // объединяя в себе все необходимые зависимости
 type Core struct {
 	// Репозитории
-	urlRepo  interfaces.URLRepository
-	userRepo interfaces.UserRepository
+	urlRepo  repository.URLRepository
+	userRepo repository.UserRepository
 
 	// Use Cases
 	urlUseCase  *URLUseCase
 	authUseCase *AuthUseCase
-	authConfig  config.JWTConfigProvider
+	authConfig  infrastructure.JWTConfigProvider
 
 	// Утилиты
-	urlGenerator interfaces.URLGenerator
+	urlGenerator infrastructure.URLGenerator
 }
 
 // NewCore создает новый экземпляр Core со всеми необходимыми зависимостями
 func NewCore(
-	urlRepo interfaces.URLRepository,
-	userRepo interfaces.UserRepository,
-	urlGenerator interfaces.URLGenerator,
-	authConfig config.JWTConfigProvider,
+	urlRepo repository.URLRepository,
+	userRepo repository.UserRepository,
+	urlGenerator infrastructure.URLGenerator,
+	authConfig infrastructure.JWTConfigProvider,
 ) *Core {
 	core := &Core{
 		urlRepo:      urlRepo,

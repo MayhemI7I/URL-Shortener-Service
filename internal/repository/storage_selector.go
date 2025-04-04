@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/config"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/file"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/memory"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/postgres"
@@ -32,7 +32,7 @@ func NewStorageSelector(cfg *config.AppConfig) *StorageSelector {
 }
 
 // SelectURLStorage выбирает и инициализирует хранилище URL наосновании переданной конфигурации при инициализации приложения
-func (s *StorageSelector) SelectURLStorage() (interfaces.URLRepository, error) {
+func (s *StorageSelector) SelectURLStorage() (repository.URLRepository, error) {
 	switch s.getStorageType() {
 	case StorageTypePostgres:
 		if s.db == nil {
@@ -53,7 +53,7 @@ func (s *StorageSelector) SelectURLStorage() (interfaces.URLRepository, error) {
 }
 
 // SelectUserStorage выбирает и инициализирует хранилище пользователей
-func (s *StorageSelector) SelectUserStorage() (interfaces.UserRepository, error) {
+	func (s *StorageSelector) SelectUserStorage() (repository.UserRepository, error) {
 	switch s.getStorageType() {
 	case StorageTypePostgres:
 		if s.db == nil {

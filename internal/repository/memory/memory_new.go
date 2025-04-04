@@ -5,7 +5,7 @@ import (
 	"sync"
 
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 )
 
@@ -16,7 +16,7 @@ type Storage struct {
 }
 
 // NewMemoryStorage создает и инициализирует новое in-memory хранилище
-func NewMemoryStorage() (interfaces.URLRepository, error) {
+func NewMemoryStorage() (repository.URLRepository, error) {
 	return &Storage{
 		urls: make(map[string]*models.URLData),
 	}, nil

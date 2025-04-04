@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/jwtutil"
@@ -17,11 +17,11 @@ import (
 
 type PostgresUserStorage struct {
 	db  *DB
-	cfg config.JWTConfigProvider
+	cfg infrastructure.JWTConfigProvider
 }
 
 // NewPostgresUserStorage создаёт новое хранилище пользователей
-func NewPostgresUserStorage(db *DB, cfg config.JWTConfigProvider) interfaces.UserRepository {
+func NewPostgresUserStorage(db *DB, cfg infrastructure.JWTConfigProvider) repository.UserRepository {
 	return &PostgresUserStorage{db: db, cfg: cfg}
 }
 

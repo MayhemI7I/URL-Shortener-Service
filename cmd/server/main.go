@@ -14,12 +14,18 @@ import (
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/usecases"
-	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/urlutil"
+	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/httputil"
 	"go.uber.org/zap"
 )
 
 // initApp выполняет все необходимые иниты и возвращает готовые зависимости.
 func initApp() (*config.Config, *usecases.Core, error) {
+	// Создаем конфигурации компонентов
+	httpConfig := http.NewHTTPConfig()
+	loggerConfig := logger.NewLoggerConfig()
+	dbConfig := postgres.NewDBConfig()
+	fileStorageConfig := file.NewFileStorageConfig()
+	jwtConfig := auth.NewJWTConfig()
 	// Загружаем конфиг
 	cfg := config.InitConfig()
 
@@ -34,7 +40,7 @@ func initApp() (*config.Config, *usecases.Core, error) {
 	}
 
 	// Инициализация утилит
-	urlGenerator := urlutil.NewURLGenerator()
+	urlGenerator := http.NewURLGenerator()
 
 	// Создание ядра приложения
 	core := usecases.NewCore(

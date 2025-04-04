@@ -1,20 +1,22 @@
 package services
 
 import (
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 )
 
 type GeneratorService struct {
-	repo interfaces.URLRepository
+	repo repository.URLRepository
 	lenght uint16 // длина короткой ссылки
 }
 
-func NewGeneratorService(repo interfaces.URLRepository, lenght uint16) *GeneratorService {
+func NewGeneratorService(repo repository.URLRepository, logger infrastructure.Logger,lenght uint16) *GeneratorService {
 	return &GeneratorService{repo: repo, lenght: lenght}
 }
 
@@ -24,6 +26,6 @@ func (s *GeneratorService) Generate(ctx context.Context, longURL string) (string
 		if len(shortURL) < int(s.lenght) {
 			return "", errors.New("generated short URL is too short")
 		}
-		logger.Log.Debug("Generated short URL: ", shortURL[:s.lenght])
+		logger.Debug("Generated short URL: ", shortURL[:s.lenght])
 		return shortURL[:s.lenght], nil
 	 }

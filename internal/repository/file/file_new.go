@@ -7,7 +7,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 
@@ -23,7 +23,7 @@ type FileStorage struct {
 }
 
 // NewFileStorage создает и инициализирует новое файловое хранилище
-func NewFileStorage(filename string) (interfaces.URLRepository, error) {
+func NewFileStorage(filename string) (repository.URLRepository, error) {
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		logger.Log.Error("Ошибка открытия файлового хранилища", zap.Error(err))

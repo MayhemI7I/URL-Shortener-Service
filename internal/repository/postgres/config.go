@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
 	"github.com/spf13/pflag"
 )
 
@@ -99,7 +99,7 @@ func (c *DBConfig) GetDSN() string {
 	return c.DSN
 }
 
-func (c *DBConfig) GetDriver() string{
+func (c *DBConfig) GetDriver() string {
 	return c.Driver
 }
 
@@ -119,5 +119,5 @@ func (c *DBConfig) GetConnMaxLifetime() int {
 }
 
 // Проверка соответствия интерфейсу
-var _ config.DBConfigProvider = (*DBConfig)(nil)
-var _ config.Configurable = (*DBConfig)(nil)
+var _ infrastructure.DBConfigProvider = (*DBConfig)(nil)
+var _ infrastructure.Configurable = (*DBConfig)(nil)

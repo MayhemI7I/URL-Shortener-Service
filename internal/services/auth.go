@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/service"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/google/uuid"
 
@@ -14,12 +15,12 @@ import (
 
 // AuthService реализует интерфейс interfaces.AuthService
 type AuthService struct {
-	repo interfaces.UserRepository
-	cfg  config.JWTConfigProvider
+	repo repository.UserRepository
+	cfg  infrastructure.JWTConfigProvider
 }
 
 // NewAuthService создает новый экземпляр AuthService
-func NewAuthService(repo interfaces.UserRepository, cfg config.JWTConfigProvider) interfaces.AuthService {
+func NewAuthService(repo repository.UserRepository, cfg infrastructure.JWTConfigProvider) service.AuthService {
 	return &AuthService{
 		repo: repo,
 		cfg:  cfg,
@@ -42,7 +43,7 @@ func (s *AuthService) Register(ctx context.Context) (*models.User,error) {
 	refreshToken := &models.RefreshToken{}
 	refreshToken.ID = id
 	refreshToken.Token = refreshTokenStr
-	refreshToken.ExpiresAt = time.Now().Add(s.cfg.RefreshTokenExpiration())
+	refreshToken.ExpiresAt = time.Now().Add(s.cfg.GetRefreshTokenExpiration())
 	return user,s.repo.SaveRefreshToken(ctx, refreshToken)
 }
 

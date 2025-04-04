@@ -5,10 +5,9 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
-
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
@@ -88,7 +87,7 @@ type PostgresStorage struct {
 }
 
 // NewPostgresURLStorage создаёт новое хранилище URL
-func NewPostgresURLStorage(db *DB) interfaces.URLRepository {
+func NewPostgresURLStorage(db *DB) repository.URLRepository {
 	return &PostgresStorage{db: db}
 }
 

@@ -3,17 +3,19 @@ package services
 import (
 	"context"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/repository"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/service"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/models"
 )
 
 // URLService реализует интерфейс interfaces.URLService
 type URLService struct {
-	repo      interfaces.URLRepository
-	generator interfaces.URLGenerator
+	repo      repository.URLRepository
+	generator infrastructure.URLGenerator
 }
 
-func NewURLService(repo interfaces.URLRepository, generator interfaces.URLGenerator) interfaces.URLService {
+func NewURLService(repo repository.URLRepository, generator infrastructure.URLGenerator) service.URLService {
 	return &URLService{repo: repo, generator: generator}
 }
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
 	"github.com/spf13/pflag"
 )
 
@@ -110,8 +110,8 @@ func (c *HTTPConfig) GetShutdownTimeout() int {
 }
 
 // Проверка соответствия интерфейсу
-var _ config.HTTPConfigProvider = (*HTTPConfig)(nil)
-var _ config.Configurable = (*HTTPConfig)(nil)
+var _ infrastructure.HTTPConfigProvider = (*HTTPConfig)(nil)
+var _ infrastructure.Configurable = (*HTTPConfig)(nil)
 
 
 

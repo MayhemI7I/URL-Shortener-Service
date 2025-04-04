@@ -4,40 +4,61 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+
 	"github.com/spf13/pflag"
 )
 
 // AppConfig основная конфигурация приложения
 type AppConfig struct {
 	// Конфигурации компонентов
-	HTTPConfig config.HTTPConfigProvider
-	LoggerConfig config.LoggerConfigProvider
-	DBConfig config.DBConfigProvider
-	FileStorageConfig config.FileStorageConfigProvider
-	JWTConfig config.JWTConfigProvider
-
+	HTTPConfig        infrastructure.HTTPConfigProvider
+	LoggerConfig      infrastructure.LoggerConfigProvider
+	DBConfig          infrastructure.DBConfigProvider
+	FileStorageConfig infrastructure.FileStorageConfigProvider
+	JWTConfig         infrastructure.JWTConfigProvider
 
 	// Флаги командной строки
 	flags *pflag.FlagSet
 }
 
-// Создаем функцию-фабрику, которая примет конкретные реализации извне
+// NewAppConfig создает новую конфигурацию приложения с пользовательскими провайдерами
 func NewAppConfig(
-	httpConfig config.HTTPConfigProvider,
-	loggerConfig config.LoggerConfigProvider,
-	dbConfig config.DBConfigProvider,
-	fileStorageConfig config.FileStorageConfigProvider,
-	jwtConfig config.JWTConfigProvider,
+	httpConfig infrastructure.HTTPConfigProvider,
+	loggerConfig infrastructure.LoggerConfigProvider,
+	dbConfig infrastructure.DBConfigProvider,
+	fileStorageConfig infrastructure.FileStorageConfigProvider,
+	jwtConfig infrastructure.JWTConfigProvider,
 ) *AppConfig {
 	return &AppConfig{
-		HTTPConfig: httpConfig,
-		LoggerConfig: loggerConfig,
-		DBConfig: dbConfig,
+		HTTPConfig:        httpConfig,
+		LoggerConfig:      loggerConfig,
+		DBConfig:          dbConfig,
 		FileStorageConfig: fileStorageConfig,
-		JWTConfig: jwtConfig,
-		flags: pflag.NewFlagSet("app", pflag.ExitOnError),
+		JWTConfig:         jwtConfig,
+		flags:             pflag.NewFlagSet("app", pflag.ExitOnError),
 	}
+}
+
+// InitConfig инициализирует все конфигурации
+func (c *AppConfig) InitConfig() error {
+	// Добавляем флаги
+	c.AddFlags()
+
+	// Парсим флаги
+	if err := c.ParseFlags(); err != nil {
+		return fmt.Errorf("ошибка парсинга флагов: %w", err)
+	}
+
+	// Загружаем из переменных окружения
+	c.LoadFromEnv()
+
+	// Валидируем конфигурации
+	if err := c.Validate(); err != nil {
+		return fmt.Errorf("ошибка валидации конфигурации: %w", err)
+	}
+
+	return nil
 }
 
 // AddFlags добавляет все флаги командной строки
@@ -82,7 +103,6 @@ func (c *AppConfig) Validate() error {
 	if err := c.FileStorageConfig.Validate(); err != nil {
 		return fmt.Errorf("ошибка конфигурации файлового хранилища: %w", err)
 	}
-			
 
 	return nil
 }
@@ -98,4 +118,4 @@ func (c *AppConfig) PrintHelp() {
 }
 
 // Проверка соответствия интерфейсу
-var _ config.ConfigContainer = (*AppConfig)(nil)
+var _ infrastructure.ConfigContainer = (*AppConfig)(nil)

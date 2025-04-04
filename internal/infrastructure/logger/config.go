@@ -3,35 +3,33 @@ package logger
 import (
 	"fmt"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
 	"github.com/spf13/pflag"
 )
 
 // LoggerConfig конфигурация для логгера
 type LoggerConfig struct {
-	name        string
-	flags       *pflag.FlagSet
-	LogPath     string
-	MaxSize     int
-	MaxBackups  int
-	MaxAge      int
-	Compress    bool
-	Level       string
-	OutputType  string // "file", "console", "both"
+	name       string
+	flags      *pflag.FlagSet
+	LogPath    string
+	MaxSize    int
+	MaxBackups int
+	MaxAge     int
+	Compress   bool
+	Level      string
 }
 
 // NewLoggerConfig создает новую конфигурацию логгера
 func NewLoggerConfig() *LoggerConfig {
 	return &LoggerConfig{
-		name:        "LOG",
-		flags:       pflag.NewFlagSet("LOG", pflag.ExitOnError),
-		LogPath:     "logs/app.log",
-		MaxSize:     100,    // 100 МБ
-		MaxBackups:  3,      // 3 резервные копии
-		MaxAge:      30,     // 30 дней
-		Compress:    true,   // сжатие старых логов
-		Level:       "info", // уровень логирования по умолчанию
-		OutputType:  "file", // тип вывода по умолчанию
+		name:       "LOG",
+		flags:      pflag.NewFlagSet("LOG", pflag.ExitOnError),
+		LogPath:    "logs/app.log",
+		MaxSize:    100,    // 100 МБ
+		MaxBackups: 3,      // 3 резервные копии
+		MaxAge:     30,     // 30 дней
+		Compress:   true,   // сжатие старых логов
+		Level:      "info", // уровень логирования по умолчанию
 	}
 }
 
@@ -43,7 +41,6 @@ func (c *LoggerConfig) AddFlags() {
 	c.flags.IntVarP(&c.MaxAge, "log-max-age", "", c.MaxAge, "Максимальный возраст файла логов в днях")
 	c.flags.BoolVarP(&c.Compress, "log-compress", "", c.Compress, "Сжимать старые логи")
 	c.flags.StringVarP(&c.Level, "log-level", "", c.Level, "Уровень логирования (debug, info, warn, error)")
-	c.flags.StringVarP(&c.OutputType, "log-output", "", c.OutputType, "Тип вывода логов (file, console, both)")
 }
 
 // LoadFromEnv загружает конфигурацию из переменных окружения
@@ -54,8 +51,8 @@ func (c *LoggerConfig) LoadFromEnv() {
 // Validate проверяет корректность конфигурации
 func (c *LoggerConfig) Validate() error {
 	// Проверяем обязательные поля
-	if c.LogPath == "" && (c.OutputType == "file" || c.OutputType == "both") {
-		return fmt.Errorf("поле log-path не может быть пустым при выводе в файл")
+	if c.LogPath == "" {
+		return fmt.Errorf("поле log-path не может быть пустым")
 	}
 	if c.Level == "" {
 		return fmt.Errorf("поле level не может быть пустым")
@@ -77,24 +74,42 @@ func (c *LoggerConfig) Validate() error {
 		return fmt.Errorf("некорректный уровень логирования: %s", c.Level)
 	}
 
-	// Проверяем тип вывода
-	if !isValidOutputType(c.OutputType) {
-		return fmt.Errorf("некорректный тип вывода логов: %s", c.OutputType)
-	}
-
 	return nil
 }
-
-// Получение значений
 
 // GetLevel возвращает уровень логирования
 func (c *LoggerConfig) GetLevel() string {
 	return c.Level
 }
 
-// GetOutput возвращает тип вывода логов
+// GetOutput всегда возвращает "both" для одновременного вывода в консоль и файл
 func (c *LoggerConfig) GetOutput() string {
-	return c.OutputType
+	return "both"
+}
+
+// GetLogPath возвращает путь к файлу логов
+func (c *LoggerConfig) GetLogPath() string {
+	return c.LogPath
+}
+
+// GetMaxSize возвращает максимальный размер файла логов в МБ
+func (c *LoggerConfig) GetMaxSize() int {
+	return c.MaxSize
+}
+
+// GetMaxBackups возвращает максимальное количество резервных копий
+func (c *LoggerConfig) GetMaxBackups() int {
+	return c.MaxBackups
+}
+
+// GetMaxAge возвращает максимальный возраст файла логов в днях
+func (c *LoggerConfig) GetMaxAge() int {
+	return c.MaxAge
+}
+
+// GetCompress возвращает флаг сжатия старых логов
+func (c *LoggerConfig) GetCompress() bool {
+	return c.Compress
 }
 
 // GetFlags возвращает набор флагов
@@ -113,16 +128,6 @@ func isValidLogLevel(level string) bool {
 	return validLevels[level]
 }
 
-// isValidOutputType проверяет корректность типа вывода
-func isValidOutputType(output string) bool {
-	validOutputs := map[string]bool{
-		"file":    true,
-		"console": true,
-		"both":    true,
-	}
-	return validOutputs[output]
-}
-
 // Проверка соответствия интерфейсу
-var _ config.LoggerConfigProvider = (*LoggerConfig)(nil)
-var _ config.Configurable = (*LoggerConfig)(nil)
+var _ infrastructure.LoggerConfigProvider = (*LoggerConfig)(nil)
+var _ infrastructure.Configurable = (*LoggerConfig)(nil)

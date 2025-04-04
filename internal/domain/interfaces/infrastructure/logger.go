@@ -1,4 +1,4 @@
-package interfaces
+package infrastructure
 
 // Logger определяет интерфейс для логирования в приложении
 type Logger interface {
@@ -31,3 +31,4 @@ func NewField(key string, value interface{}) Field {
 		Value: value,
 	}
 }
+
