@@ -11,8 +11,40 @@ import (
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/config"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/auth"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/http"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/file"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/postgres"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/usecases"
 )
+
+func initApp(){
+	//Инициализируем конфигурацию
+	cfgHTTP := http.NewHTTPConfig()
+	cfgLogger := logger.NewLoggerConfig()
+	cfgDB := postgres.NewDBConfig()
+	cfgFile := file.NewFileStorageConfig()
+	cfgJWT := auth.NewJWTConfig()
+
+	cfg := config.NewAppConfig(cfgHTTP,cfgLogger,cfgDB,cfgFile,cfgJWT)
+
+
+	core := 
+}
+
+func initConfig()*config.AppConfig{
+	//Инициализируем конфигурацию
+	cfgHTTP := http.NewHTTPConfig()
+	cfgLogger := logger.NewLoggerConfig()
+	cfgDB := postgres.NewDBConfig()
+	cfgFile := file.NewFileStorageConfig()
+	cfgJWT := auth.NewJWTConfig()
+
+	cfg := config.NewAppConfig(cfgHTTP,cfgLogger,cfgDB,cfgFile,cfgJWT)
+	return cfg
+
+}
 
 // App представляет основную структуру приложения
 type App struct {

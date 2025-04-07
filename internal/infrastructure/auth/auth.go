@@ -9,7 +9,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/config"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
 	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/httputil"
 )
@@ -18,7 +18,7 @@ import (
 // HandleTokenRefresh handles the token refresh process.
 // It extracts the refresh token from the request, gets a new access token from the storage,
 // and sets the new access token and refresh token as cookies in the response.
-func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s config.JWTConfigProvider) (string, error) {
+func HandleTokenRefresh(w http.ResponseWriter, r *http.Request, s infrastructure.JWTConfigProvider) (string, error) {
 	// Extract the refresh token from the request.
 	refreshToken, err := httputil.ExtractCookie(r, httputil.RefreshTokenCookie)
 	if err != nil && err != http.ErrNoCookie {

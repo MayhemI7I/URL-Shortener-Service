@@ -26,6 +26,6 @@ func (s *GeneratorService) Generate(ctx context.Context, longURL string) (string
 		if len(shortURL) < int(s.lenght) {
 			return "", errors.New("generated short URL is too short")
 		}
-		logger.Debug("Generated short URL: ", shortURL[:s.lenght])
+		logger.Log.Debug("Generated short URL: ", shortURL[:s.lenght])
 		return shortURL[:s.lenght], nil
 	 }
