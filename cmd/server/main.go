@@ -2,67 +2,36 @@ package main
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 	"time"
 
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/config"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/http/middleware"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository"
-	"github.com/MayhemI7I/URL-Shortener-Service/internal/usecases"
-	"github.com/MayhemI7I/URL-Shortener-Service/pkg/utils/httputil"
-	"go.uber.org/zap"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/app"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/middleware"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/zstd"
 )
 
-// initApp выполняет все необходимые иниты и возвращает готовые зависимости.
-func initApp() (*config.Config, *usecases.Core, error) {
-	// Создаем конфигурации компонентов
-	httpConfig := http.NewHTTPConfig()
-	loggerConfig := logger.NewLoggerConfig()
-	dbConfig := postgres.NewDBConfig()
-	fileStorageConfig := file.NewFileStorageConfig()
-	jwtConfig := auth.NewJWTConfig()
-	// Загружаем конфиг
-	cfg := config.InitConfig()
-
-	// Инициализируем логгер
-	logger := logger.NewLogger(cfg.LogLevel)
-
-	// Инициализация репозиториев через селектор
-	storageSelector := repository.NewStorageSelector(cfg)
-	urlRepo, err := storageSelector.SelectURLStorage()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// Инициализация утилит
-	urlGenerator := http.NewURLGenerator()
-
-	// Создание ядра приложения
-	core := usecases.NewCore(
-		urlRepo,
-		urlGenerator,
-		cfg.JWT,
-	)
-
-	return cfg, core, nil
-}
-
 func main() {
-	cfg, core, err := initApp()
-	if err != nil {
-		logger.Log.Fatalf("failed to initialize application: %v", err)
+	// Получаем экземпляр фасада приложения
+	appFacade := app.GetInstance()
+
+	// Инициализируем приложение
+	if err := appFacade.Init(); err != nil {
+		log.Fatalf("Ошибка инициализации приложения: %v", err)
 	}
-	defer logger.CloseLogger()
+	defer appFacade.GetDB().Close()
+
+	// Получаем логгер
+	logger := appFacade.GetLogger()
 
 	// Создаем HTTP multiplexer
 	mux := http.NewServeMux()
 
 	// Получаем use cases из ядра
+	core := appFacade.GetCore()
 	urlService := core.URLService()
 	authService := core.AuthService()
 
@@ -71,7 +40,7 @@ func main() {
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			urlService.HandURL(w, r)
 		}),
-		middleware.WithLog,
+		middleware.WithLog(logger),
 		zstd.Decompression,
 		zstd.Compression,
 	))
@@ -80,14 +49,14 @@ func main() {
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authService.Login(w, r)
 		}),
-		middleware.WithLog,
+		middleware.WithLog(logger),
 	))
 
 	mux.Handle("/api/shorten", middleware.Conveyor(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			urlService.HandlePost(w, r)
 		}),
-		middleware.WithLog,
+		middleware.WithLog(logger),
 		zstd.Decompression,
 		zstd.Compression,
 		middleware.Auth(core),
@@ -97,56 +66,45 @@ func main() {
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			urlService.HandleGetUserAllURLs(w, r)
 		}),
-		middleware.WithLog,
+		middleware.WithLog(logger),
 		zstd.Decompression,
 		zstd.Compression,
 		middleware.Auth(core),
 	))
 
 	// Запускаем сервер
-	if err := runServer(cfg, mux); err != nil {
-		logger.Log.Fatalf("failed to start server: %v", err)
-	}
-}
-
-// runServer запускает HTTP-сервер
-func runServer(cfg *config.Config, mux *http.ServeMux) error {
-	addr := cfg.ServerAdress + ":" + cfg.ServerPort
+	cfg := appFacade.GetConfig()
 	server := &http.Server{
-		Addr:         addr,
+		Addr:         cfg.GetServerAddr(),
 		Handler:      mux,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  time.Duration(cfg.HTTPConfig.GetReadTimeout()) * time.Second,
+		WriteTimeout: time.Duration(cfg.HTTPConfig.GetWriteTimeout()) * time.Second,
 	}
-	logger.Log.Infof(time.Now().Format("2006-01-02 15:04:05")+"Server started on %s", addr)
 
-	errChan := make(chan error, 1)
+	// Канал для сигналов завершения
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	// Запуск сервера в отдельной горутине
 	go func() {
+		logger.Info("Сервер запущен", "address", cfg.GetServerAddr())
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			errChan <- err
+			logger.Fatal("Ошибка запуска сервера", "error", err)
 		}
 	}()
 
-	signChan := make(chan os.Signal, 1)
-	signal.Notify(signChan, syscall.SIGINT, syscall.SIGTERM)
+	// Ожидание сигнала завершения
+	<-done
+	logger.Info("Получен сигнал завершения")
 
-	select {
-	case err := <-errChan:
-		return err
-	case <-signChan:
-		logger.Log.Info("Shutting down server")
-		timeout, err := strconv.Atoi(cfg.ShutdownTimeout)
-		if err != nil {
-			logger.Log.Error("failed to parse shutdown timeout", zap.Error(err))
-			return err
-		}
-		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
-		defer cancel()
-		if err := server.Shutdown(ctx); err != nil {
-			logger.Log.Error("shutdown error", zap.Error(err))
-			return err
-		}
-		logger.Log.Info("Server stopped")
-		return nil
+	// Создаем контекст с таймаутом для graceful shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.HTTPConfig.GetShutdownTimeout())*time.Second)
+	defer cancel()
+
+	// Graceful shutdown
+	if err := server.Shutdown(ctx); err != nil {
+		logger.Error("Ошибка при завершении работы сервера", "error", err)
 	}
+
+	logger.Info("Сервер остановлен")
 }

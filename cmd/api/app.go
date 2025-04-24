@@ -1,100 +1,156 @@
-package main
+package api
 
 import (
-	"context"
 	"fmt"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	"sync"
 
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/config"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/domain/interfaces/infrastructure"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/auth"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/repository/db"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/hash"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/http"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/infrastructure/logger"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/file"
+	"github.com/MayhemI7I/URL-Shortener-Service/internal/repository/postgres"
 	"github.com/MayhemI7I/URL-Shortener-Service/internal/usecases"
 )
 
-// App представляет основную структуру приложения
-type App struct {
+// AppFacade представляет фасад для инициализации приложения
+type AppFacade struct {
 	config *config.AppConfig
 	logger infrastructure.Logger
-	core  *usecases.Core
+	core   *usecases.Core
+	db     *db.DB
 }
 
-// NewApp создает новый экземпляр приложения
-func NewApp(cfg *config.AppConfig, log infrastructure.Logger, core *usecases.Core) *App {
-	return &App{
-		config: cfg,
-		logger: log,
-		core: core,
-	}
+var (
+	instance *AppFacade
+	once     sync.Once
+)
+
+// GetInstance возвращает единственный экземпляр AppFacade (Синглтон)
+func GetInstance() *AppFacade {
+	once.Do(func() {
+		instance = &AppFacade{}
+	})
+	return instance
 }
 
-// setupRouter настраивает маршрутизацию
-func (a *App) setupRouter() http.Handler {
-	// Создаем маршрутизатор
-	mux := http.NewServeMux()
-
-	// Настраиваем маршруты
-	// Пример:
-	// mux.Handle("/api/v1/endpoint", middleware.Chain(
-	//    handler.NewEndpointHandler(a.service),
-	//    middleware.Logger(a.logger),
-	// ))
-
-	// TODO: Добавьте здесь свои маршруты
-
-	return mux
-}
-
-// Run запускает приложение
-func (a *App) Run() error {
-	// Настраиваем маршрутизатор
-	router := a.setupRouter()
-
-	// Создаем HTTP-сервер
-	a.server = &http.Server{
-		Addr:         a.config.GetServerAddr(),
-		Handler:      router,
-		ReadTimeout:  time.Duration(a.config.HTTPConfig.GetReadTimeout())
-		WriteTimeout: time.Duration(a.)
-		IdleTimeout:  60 * time.Second,
+// Init инициализирует приложение
+func (a *AppFacade) Init() error {
+	// Инициализация конфигурации
+	if err := a.initConfig(); err != nil {
+		return fmt.Errorf("ошибка инициализации конфигурации: %w", err)
 	}
 
-	// Канал для ошибок сервера
-	serverErrors := make(chan error, 1)
+	// Инициализация логгера
+	if err := a.initLogger(); err != nil {
+		return fmt.Errorf("ошибка инициализации логгера: %w", err)
+	}
 
-	// Запускаем сервер в отдельной горутине
-	go func() {
-		a.logger.Info("Сервер запущен",
-			infrastructure.Field{Key: "address", Value: a.config.GetServerAddr()})
-		serverErrors <- a.server.ListenAndServe()
-	}()
+	// Инициализация базы данных
+	if err := a.initDB(); err != nil {
+		return fmt.Errorf("ошибка инициализации базы данных: %w", err)
+	}
 
-	// Канал для сигналов ОС
-	shutdown := make(chan os.Signal, 1)
-	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
-
-	// Блокируем до получения сигнала или ошибки
-	select {
-	case err := <-serverErrors:
-		return fmt.Errorf("ошибка запуска сервера: %w", err)
-
-	case sig := <-shutdown:
-		a.logger.Info("Получен сигнал завершения работы",
-			infrastructure.Field{Key: "signal", Value: sig.String()})
-
-		// Создаем контекст с таймаутом для корректного завершения
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
-		// Пытаемся корректно завершить работу сервера
-		if err := a.server.Shutdown(ctx); err != nil {
-			// Если не получилось корректно завершить, делаем это принудительно
-			a.server.Close()
-			return fmt.Errorf("ошибка корректного завершения работы сервера: %w", err)
-		}
+	// Инициализация ядра приложения
+	if err := a.initCore(); err != nil {
+		return fmt.Errorf("ошибка инициализации ядра: %w", err)
 	}
 
 	return nil
+}
+
+// initConfig инициализирует конфигурацию
+func (a *AppFacade) initConfig() error {
+	// Создаем конфигурации компонентов
+	httpConfig := http.NewHTTPConfig()
+	loggerConfig := logger.NewLoggerConfig()
+	dbConfig := postgres.NewDBConfig()
+	fileStorageConfig := file.NewFileStorageConfig()
+	jwtConfig := auth.NewJWTConfig()
+
+	// Инициализируем конфигурацию приложения
+	cfg, err := config.Init(
+		httpConfig,
+		loggerConfig,
+		dbConfig,
+		fileStorageConfig,
+		jwtConfig,
+	)
+	if err != nil {
+		return err
+	}
+
+	a.config = cfg
+	return nil
+}
+
+// initLogger инициализирует логгер
+func (a *AppFacade) initLogger() error {
+	loggerFactory := logger.NewLoggerFactory(a.config.LoggerConfig)
+	appLogger, err := loggerFactory.CreateDefaultLogger()
+	if err != nil {
+		return err
+	}
+
+	a.logger = appLogger
+	return nil
+}
+
+// initDB инициализирует базу данных
+func (a *AppFacade) initDB() error {
+	dbInstance, err := db.GetInstance()
+	if err != nil {
+		return err
+	}
+
+	if err := dbInstance.Init(a.config.DBConfig, a.config.JWTConfig); err != nil {
+		return err
+	}
+
+	a.db = dbInstance
+	return nil
+}
+
+// initCore инициализирует ядро приложения
+func (a *AppFacade) initCore() error {
+	// Получаем репозитории из базы данных
+	urlRepo := a.db.GetURLRepository()
+	userRepo := a.db.GetUserRepository()
+
+	// Создаем генератор URL
+	urlGenerator := hash.NewHashGenerator()
+
+	// Создаем ядро приложения
+	core := usecases.NewCore(
+		urlRepo,
+		userRepo,
+		urlGenerator,
+		a.config.JWTConfig,
+	)
+
+	a.core = core
+	return nil
+}
+
+// GetConfig возвращает конфигурацию приложения
+func (a *AppFacade) GetConfig() *config.AppConfig {
+	return a.config
+}
+
+// GetLogger возвращает логгер
+func (a *AppFacade) GetLogger() infrastructure.Logger {
+	return a.logger
+}
+
+// GetCore возвращает ядро приложения
+func (a *AppFacade) GetCore() *usecases.Core {
+	return a.core
+}
+
+// GetDB возвращает экземпляр базы данных
+func (a *AppFacade) GetDB() *db.DB {
+	return a.db
 }
